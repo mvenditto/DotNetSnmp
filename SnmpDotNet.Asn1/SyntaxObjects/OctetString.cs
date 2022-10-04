@@ -25,7 +25,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
 
             if (hasNonPrintable == false)
             {
-                return Encoding.UTF8.GetString(_octets);
+                return "String: " + Encoding.UTF8.GetString(_octets);
             }
 
             var hex = Convert.ToHexString(_octets)
@@ -33,7 +33,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
                           .Select(c => string.Concat(c))
                           .Aggregate((a, b) => a + " " + b);
 
-            return hex;
+            return "HexString: " + hex;
         }
 
         public void WriteTo(AsnWriter writer)
