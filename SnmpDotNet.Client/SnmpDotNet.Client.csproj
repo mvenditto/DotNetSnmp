@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SnmpDotNet.V1\SnmpDotNet.V1.csproj" />
+    <ProjectReference Include="..\SnmpDotNet.V2c\SnmpDotNet.V2c.csproj" />
+    <ProjectReference Include="..\SnmpDotNet.V3\SnmpDotNet.V3.csproj" />
+  </ItemGroup>
+
+</Project>
