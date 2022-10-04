@@ -2,7 +2,7 @@
 
 SnmpDotNet is a NET 6 SNMP client built ontop of `System.Formats.Asn1` BER serialization capabilities.
 
-> The library in in early development stage and subject to frequent api changes
+> The library is in early development stage and subject to frequent api changes
 
 ### Goals:
   - support for SNMP V1, V2c and V3
