@@ -7,7 +7,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
     {
         public void WriteTo(AsnWriter writer)
         {
-            writer.WriteOctetString(OctetString);
+            writer.WriteOctetString(OctetString, AsnTypes.Opaque);
         }
 
         public static implicit operator byte[](Opaque o) => o.OctetString;
