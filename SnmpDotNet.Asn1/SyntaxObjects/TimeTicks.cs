@@ -22,19 +22,9 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
 
         public override string ToString()
         {
-            var timeticks = Value;
-            var centiseconds = timeticks % 100;
-            timeticks /= 100;
-            var days = timeticks / (60 * 60 * 24);
-            timeticks %= (60 * 60 * 24);
-            var hours = timeticks / (60 * 60);
-            timeticks %= (60 * 60);
-            var minutes = timeticks / 60;
-            var seconds = timeticks % 60;
-
-            return string.Format(
-                "TimeTicks: ({5}) {0}:{1}:{2}:{3}.{4}",
-                days, hours, minutes, seconds, centiseconds, Value);
+            var ts = TimeSpan.FromSeconds(Value / 100f);
+            var repr = ts.ToString(@"dd\:hh\:mm\:ss\.ff");
+            return "TimeTicks: " + repr;
         }
 
         public static implicit operator uint(TimeTicks t) => t.Value;
