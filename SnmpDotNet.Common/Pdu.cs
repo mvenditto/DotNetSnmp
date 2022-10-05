@@ -17,5 +17,18 @@ namespace SnmpDotNet.Common.Definitions
         public VarBindList? VariableBindings { get; set; }
 
         public abstract void WriteTo(AsnWriter writer);
+
+        /// <summary>
+        /// Throws an exception if the ErrorStatus property for the SNMP response PDU is != 0.
+        /// </summary>
+        /// <see cref="PduErrorStatus"/>
+        /// <exception cref="SnmpRequestException"></exception>
+        public void EnsureNoError()
+        {
+            if (ErrorStatus != PduErrorStatus.NoError)
+            {
+                throw new SnmpRequestException(ErrorStatus, ErrorIndex);
+            }
+        }
     }
 }
