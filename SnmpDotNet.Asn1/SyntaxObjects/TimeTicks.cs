@@ -33,7 +33,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             var seconds = timeticks % 60;
 
             return string.Format(
-                "TimeTicks: ({5}) {0}:{1}:{2}:{3}.{4} }}",
+                "TimeTicks: ({5}) {0}:{1}:{2}:{3}.{4}",
                 days, hours, minutes, seconds, centiseconds, Value);
         }
 
