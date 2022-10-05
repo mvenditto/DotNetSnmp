@@ -37,5 +37,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             name = Name;
             value = Value;
         }
+
+        public static explicit operator VarBind(string oid) => new(oid);
     }
 }

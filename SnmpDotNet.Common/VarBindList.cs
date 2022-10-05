@@ -22,10 +22,16 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         {
             _variableBindings = new List<VarBind>(bindings);
         }
+
         public VarBindList(params string[] oids)
         {
-            _variableBindings = oids.Select(oid => new VarBind(oid))
-                .ToList();
+            _variableBindings = oids.Select(
+                oid => new VarBind(oid)).ToList();
+        }
+        public VarBindList(params ObjectIdentifier[] oids)
+        {
+            _variableBindings = oids.Select(
+                oid => new VarBind(oid)).ToList();
         }
 
         public VarBindList Add(VarBind varBind)
