@@ -12,11 +12,11 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
     /// <param name="Value"></param>
     public readonly record struct IpAddress : IAsnSerializable
     {
-        public readonly byte[] Value { get; }
+        public readonly byte[] AddressBytes { get; }
 
         public IpAddress(string address)
         {
-            Value = Encoding.UTF8.GetBytes(address);
+            AddressBytes = Encoding.UTF8.GetBytes(address);
         }
 
         public IpAddress(byte[] address)
@@ -26,24 +26,30 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
                 throw new ArgumentException("IpAddress must be a 4-Length OctetString");
             }
 
-            Value = address;
+            AddressBytes = address;
         }
 
         public IpAddress(IPAddress address)
         {
-            Value = address.GetAddressBytes();
+            AddressBytes = address.GetAddressBytes();
         }
 
         public void WriteTo(AsnWriter writer)
         {
             writer.WriteOctetString(
-                Value,
+                AddressBytes,
                 tag: SmiAsnTags.IpAddress);
         }
 
         public void Deconstruct(out IPAddress address)
         {
-            address = new IPAddress(Value);
+            address = new IPAddress(AddressBytes);
+        }
+
+        public override string ToString()
+        {
+            var ip = AddressBytes;
+            return $"IpAddress: {ip[0]}.{ip[1]}.{ip[2]}.{ip[3]}";
         }
     }
 }
