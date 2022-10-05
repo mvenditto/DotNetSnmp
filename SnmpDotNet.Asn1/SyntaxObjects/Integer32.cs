@@ -9,7 +9,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         {
             writer.WriteIntegerUnsigned(
                 BitConverter.GetBytes(Value),
-                tag: SmiAsnTags.Integer32);
+                tag: AsnTags.Integer32);
         }
 
         public void Deconstruct(out int value)

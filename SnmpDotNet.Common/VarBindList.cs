@@ -88,34 +88,34 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
                 }
                 else if (tag == Asn1Tag.Integer)
                 {
-                    if (vbSeq.TryReadInt32(out var integer32, SmiAsnTags.Integer32))
+                    if (vbSeq.TryReadInt32(out var integer32, AsnTags.Integer32))
                     {
                         bindings.Add(
                             new(oid, new Integer32(integer32)));
                     }
                 }
-                else if (tag == SmiAsnTags.Counter32)
+                else if (tag == AsnTags.Counter32)
                 {
-                    if (vbSeq.TryReadUInt32(out var uint32, SmiAsnTags.Counter32))
+                    if (vbSeq.TryReadUInt32(out var uint32, AsnTags.Counter32))
                     {
                         bindings.Add(
                             new(oid, new Counter32(uint32)));
                     }
                 }
-                else if (tag == SmiAsnTags.Gauge32)
+                else if (tag == AsnTags.Gauge32)
                 {
-                    if (vbSeq.TryReadUInt32(out var uint32, SmiAsnTags.Gauge32))
+                    if (vbSeq.TryReadUInt32(out var uint32, AsnTags.Gauge32))
                     {
                         bindings.Add(
                             new(oid, new Gauge32(uint32)));
                     }
                 }
-                else if (tag == SmiAsnTags.IpAddress)
+                else if (tag == AsnTags.IpAddress)
                 {
                     if (vbSeq.TryReadOctetString(
                         ipAddressBuff,
                         out var len,
-                        SmiAsnTags.IpAddress))
+                        AsnTags.IpAddress))
                     {
                         if (len == 4)
                         {
@@ -124,17 +124,17 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
                         }
                     }
                 }
-                else if (tag == SmiAsnTags.TimeTicks)
+                else if (tag == AsnTags.TimeTicks)
                 {
-                    if (vbSeq.TryReadUInt32(out var uint32, SmiAsnTags.TimeTicks))
+                    if (vbSeq.TryReadUInt32(out var uint32, AsnTags.TimeTicks))
                     {
                         bindings.Add(
                             new(oid, new TimeTicks(uint32)));
                     }
                 }
-                else if (tag == SmiAsnTags.Unsigned32)
+                else if (tag == AsnTags.Unsigned32)
                 {
-                    if (vbSeq.TryReadUInt32(out var uint32, SmiAsnTags.Unsigned32))
+                    if (vbSeq.TryReadUInt32(out var uint32, AsnTags.Unsigned32))
                     {
                         bindings.Add(
                             new(oid, new Unsigned32(uint32)));

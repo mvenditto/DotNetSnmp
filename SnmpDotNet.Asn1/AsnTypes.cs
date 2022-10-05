@@ -2,7 +2,7 @@
 
 namespace SnmpDotNet.Asn1.Serialization
 {
-    public static class SmiAsnTags
+    public static class AsnTags
     {
         public readonly static Asn1Tag IpAddress = new(TagClass.Application, 0);
 
@@ -19,5 +19,16 @@ namespace SnmpDotNet.Asn1.Serialization
         public readonly static Asn1Tag Counter64 = new(TagClass.Application, 6);
 
         public readonly static Asn1Tag Integer32 = Asn1Tag.Integer;
+
+        #region draft-perkins-opaque-01.txt Opaque types
+        public readonly static Asn1Tag Float = new(TagClass.Application, 8);
+
+        public readonly static Asn1Tag Double = new(TagClass.Application, 9);
+
+        public readonly static Asn1Tag Integer64 = new(TagClass.Application, 10);
+
+        public readonly static Asn1Tag Unsigned64 = new(TagClass.Application, 11);
+
+        #endregion
     }
 }

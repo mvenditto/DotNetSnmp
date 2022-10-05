@@ -38,7 +38,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         {
             writer.WriteOctetString(
                 AddressBytes,
-                tag: SmiAsnTags.IpAddress);
+                tag: AsnTags.IpAddress);
         }
 
         public void Deconstruct(out IPAddress address)
