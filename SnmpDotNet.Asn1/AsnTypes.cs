@@ -2,7 +2,7 @@
 
 namespace SnmpDotNet.Asn1.Serialization
 {
-    public static class AsnTags
+    public static class AsnTypes
     {
         public readonly static Asn1Tag IpAddress = new(TagClass.Application, 0);
 
@@ -28,7 +28,6 @@ namespace SnmpDotNet.Asn1.Serialization
         public readonly static Asn1Tag Integer64 = new(TagClass.Application, 10);
 
         public readonly static Asn1Tag Unsigned64 = new(TagClass.Application, 11);
-
         #endregion
     }
 }

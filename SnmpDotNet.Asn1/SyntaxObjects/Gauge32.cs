@@ -15,7 +15,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         {
             writer.WriteIntegerUnsigned(
                 BitConverter.GetBytes(Value),
-                tag: AsnTags.Gauge32);
+                tag: AsnTypes.Gauge32);
         }
         public void Deconstruct(out uint value)
         {

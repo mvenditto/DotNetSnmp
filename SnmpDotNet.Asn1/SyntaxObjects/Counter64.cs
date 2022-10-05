@@ -9,7 +9,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         {
             writer.WriteIntegerUnsigned(
                 BitConverter.GetBytes(Value),
-                tag: AsnTags.Counter64);
+                tag: AsnTypes.Counter64);
         }
 
         public void Deconstruct(out ulong value)

@@ -17,7 +17,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         {
             writer.WriteIntegerUnsigned(
                 BitConverter.GetBytes(Value),
-                tag: AsnTags.TimeTicks);
+                tag: AsnTypes.TimeTicks);
         }
 
         public override string ToString()
