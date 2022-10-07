@@ -7,9 +7,15 @@ using Xunit;
 
 namespace SnmpDotNet.Test
 {
+    /// <summary>
+    /// Test steps summary:
+    ///   1. read a textual hex dump produced from an net-snmp command (e.g snmpget)
+    ///      with the -d (dump) flag set
+    ///   2. test that the decoded message matches the expected (known) values
+    ///   3. encode the decoded message and compare to the original serialized BER bytes
+    /// </summary>
     public class SerializationTest
     {
-
         [Fact]
         public void DecodeEncodeV1GetRequestMessage()
         {
