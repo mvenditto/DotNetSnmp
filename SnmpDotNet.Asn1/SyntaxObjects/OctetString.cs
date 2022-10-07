@@ -6,29 +6,29 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
 {
     public readonly record struct OctetString : IAsnSerializable
     {
-        private readonly byte[] _octets;
+        public byte[] Octets { get; }
 
         public OctetString(string str)
         {
-            _octets = Encoding.UTF8.GetBytes(str);
+            Octets = Encoding.UTF8.GetBytes(str);
         }
 
         public OctetString(byte[] octets)
         {
-            _octets = octets;
+            Octets = octets;
         }
 
         public override string ToString()
         {
-            var hasNonPrintable = _octets.Any(
+            var hasNonPrintable = Octets.Any(
                 c => char.IsControl((char)c) && !char.IsWhiteSpace((char)c));
 
             if (hasNonPrintable == false)
             {
-                return "String: " + Encoding.UTF8.GetString(_octets);
+                return "String: " + Encoding.UTF8.GetString(Octets);
             }
 
-            var hex = Convert.ToHexString(_octets)
+            var hex = Convert.ToHexString(Octets)
                           .Chunk(2)
                           .Select(c => string.Concat(c))
                           .Aggregate((a, b) => a + " " + b);
@@ -38,7 +38,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
 
         public void WriteTo(AsnWriter writer)
         {
-            writer.WriteOctetString(_octets);
+            writer.WriteOctetString(Octets);
         }
 
         public static implicit operator string(OctetString o) => o.ToString();
