@@ -63,10 +63,6 @@ namespace SnmpDotNet.Protocol.V1
             {
                 throw new NotImplementedException();
             }
-            else if (pduType == SnmpAsnTags.GetMsg)
-            {
-                pdu = GetRequestPdu.ReadFrom(rootSeq);
-            }
 
             return new SnmpV2Message
             {
