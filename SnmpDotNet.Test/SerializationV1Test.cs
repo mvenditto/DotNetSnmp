@@ -14,7 +14,7 @@ namespace SnmpDotNet.Test
     ///   2. test that the decoded message matches the expected (known) values
     ///   3. encode the decoded message and compare to the original serialized BER bytes
     /// </summary>
-    public class SerializationTest
+    public class SerializationV1Test
     {
         [Fact]
         public void DecodeEncodeV1GetRequestMessage()
@@ -112,10 +112,10 @@ namespace SnmpDotNet.Test
         [Fact]
         public void DecodeEncodeV1GetNextRequestMessage()
         {
-            var dump = @"Sending 42 bytes to UDP: [127.0.0.1]:161->[0.0.0.0]:0
-            0000: 30 28 02 01  00 04 06 70  75 62 6C 69  63 A1 1B 02    0(.....public...
-            0016: 04 5E 4C 7A  AE 02 01 00  02 01 00 30  0D 30 0B 06    .^Lz.......0.0..
-            0032: 07 2B 06 01  02 01 01 01  05 00                       .+........";
+            var dump = @"Sending 43 bytes to UDP: [127.0.0.1]:161->[0.0.0.0]:0
+                0000: 30 29 02 01  00 04 06 70  75 62 6C 69  63 A1 1C 02    0).....public...
+                0016: 04 09 4D D2  15 02 01 00  02 01 00 30  0E 30 0C 06    ..M........0.0..
+                0032: 08 2B 06 01  02 01 01 01  00 05 00                    .+.........";
 
             var messageBytes = Dump.BytesFromHexString(dump);
 
@@ -139,9 +139,55 @@ namespace SnmpDotNet.Test
 
             var varbind = message!.Pdu.VariableBindings!.FirstOrDefault();
 
-            Assert.Equal("1.3.6.1.2.1.1.1", varbind.Name);
+            Assert.Equal("1.3.6.1.2.1.1.1.0", varbind.Name);
 
             Assert.IsType<Null>(varbind.Value);
+
+            var writer = new AsnWriter(AsnEncodingRules.BER);
+
+            message.WriteTo(writer);
+
+            var encoded = writer.Encode();
+
+            Assert.Equal(messageBytes, encoded);
+        }
+
+        [Fact]
+        public void DecodeEncodeV1GetNextResponseMessage()
+        {
+            var dump = @"Received 53 byte packet from UDP: [127.0.0.1]:161->[0.0.0.0]:55146
+                0000: 30 33 02 01  00 04 06 70  75 62 6C 69  63 A2 26 02    03.....public.&.
+                0016: 04 09 4D D2  15 02 01 00  02 01 00 30  18 30 16 06    ..M........0.0..
+                0032: 08 2B 06 01  02 01 01 02  00 06 0A 2B  06 01 04 01    .+.........+....
+                0048: BF 08 03 02  0A                                       .....";
+
+            var messageBytes = Dump.BytesFromHexString(dump);
+
+            var reader = new AsnReader(messageBytes, AsnEncodingRules.BER);
+
+            var message = SnmpV1Message.ReadFrom(reader);
+
+            Assert.NotNull(message);
+
+            Assert.Equal(
+                ProtocolVersion.SnmpV1,
+                message.ProtocolVersion);
+
+            Assert.Equal("public", message.Community);
+
+            Assert.NotNull(message.Pdu);
+
+            Assert.IsType<GetResponsePdu>(message.Pdu);
+
+            Assert.NotNull(message.Pdu.VariableBindings);
+
+            var varbind = message!.Pdu.VariableBindings!.FirstOrDefault();
+
+            Assert.Equal("1.3.6.1.2.1.1.2.0", varbind.Name);
+
+            Assert.IsType<ObjectIdentifier>(varbind.Value);
+
+            Assert.Equal("1.3.6.1.4.1.8072.3.2.10", ((ObjectIdentifier) varbind.Value).Oid);
 
             var writer = new AsnWriter(AsnEncodingRules.BER);
 
