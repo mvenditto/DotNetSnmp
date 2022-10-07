@@ -39,17 +39,30 @@ namespace SnmpDotNet.Protocol.V3
 
             var utf8 = Encoding.UTF8;
 
-            var pduTag = seq.PeekTag();
+            var pduType = seq.PeekTag();
 
             Pdu pdu = null;
 
-            if (pduTag == SnmpAsnTags.GetResponseMsg)
+
+            if (pduType == SnmpAsnTags.GetResponseMsg)
             {
                 pdu = GetResponsePdu.ReadFrom(seq);
             }
-            else if (pduTag == SnmpAsnTags.ReportMsg)
+            if (pduType == SnmpAsnTags.GetMsg)
             {
-                pdu = ReportPdu.ReadFrom(seq);
+                pdu = GetRequestPdu.ReadFrom(seq);
+            }
+            else if (pduType == SnmpAsnTags.GetNextMsg)
+            {
+                pdu = GetNextRequestPdu.ReadFrom(seq);
+            }
+            else if (pduType == SnmpAsnTags.BulkMsg)
+            {
+                throw new NotImplementedException();
+            }
+            else if (pduType == SnmpAsnTags.InformMsg)
+            {
+                throw new NotImplementedException();
             }
 
             return new()
