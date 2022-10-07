@@ -22,7 +22,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --collect:"XPlat Code Coverage" --results-directory TestResults --verbosity normal
+      run: dotnet test --collect:"XPlat Code Coverage" --results-directory TestResults
     - name: Upload Test results to Codecov
       uses: codecov/codecov-action@v3
       with:
