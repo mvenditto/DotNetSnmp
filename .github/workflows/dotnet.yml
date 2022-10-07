@@ -22,7 +22,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --collect:"XPlat Code Coverage" --results-directory TestResults
+      run: dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=cobertura
     - name: Upload Test results to Codecov
       uses: codecov/codecov-action@v3
       with:
