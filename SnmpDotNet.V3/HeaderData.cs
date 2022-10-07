@@ -15,7 +15,7 @@ namespace SnmpDotNet.Protocol.V3
         public MsgFlags MsgFlags { get; set; }
 
         [Range(1, int.MaxValue)]
-        public SecurityModel MsgSecurityModel { get; set; }
+        public SecurityModel MsgSecurityModel { get; set; } = SecurityModel.Usm;
 
         public void WriteTo(AsnWriter writer)
         {

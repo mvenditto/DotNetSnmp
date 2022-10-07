@@ -8,6 +8,8 @@ namespace SnmpDotNet.Protocol.V3.Security
 {
     public enum SecurityModel: byte
     {
-        UserSecurityModel = 3
+        V1 = 0,
+        V2c = 1,
+        Usm = 3
     }
 }
