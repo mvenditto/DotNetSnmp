@@ -11,7 +11,16 @@ namespace SnmpDotNet.Protocol.V1
 
         public override void WriteTo(AsnWriter writer)
         {
-            throw new NotImplementedException();
+            using (_ = writer.PushSequence(tag: SnmpAsnTags.GetResponseMsg))
+            {
+                writer.WriteInteger(RequestId);
+                writer.WriteInteger((int)ErrorStatus);
+                writer.WriteInteger(ErrorIndex);
+                if (VariableBindings != null)
+                {
+                    VariableBindings.WriteTo(writer);
+                }
+            }
         }
 
         public static GetResponsePdu ReadFrom(AsnReader reader)
