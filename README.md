@@ -1,4 +1,5 @@
 # SnmpDotNet
+[![Build](https://github.com/mvenditto/SnmpDotNet/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mvenditto/SnmpDotNet/actions/workflows/dotnet.yml) [![codecov](https://codecov.io/gh/mvenditto/SnmpDotNet/branch/master/graph/badge.svg?token=P3JJTXWQ2V)](https://codecov.io/gh/mvenditto/SnmpDotNet)
 
 SnmpDotNet is a NET 6 SNMP client built ontop of `System.Formats.Asn1` BER serialization capabilities.
 
