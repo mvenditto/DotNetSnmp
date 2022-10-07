@@ -1,6 +1,6 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
 using SnmpDotNet.Protocol.V3.Security.Authentication;
-using SnmpDotNet.Protocol.V3.Security.Privacy;
+using SnmpDotNet.V3.Security.Privacy;
 using System.Formats.Asn1;
 using System.Text;
 
@@ -8,17 +8,19 @@ namespace SnmpDotNet.Protocol.V3.Security
 {
     public class UsmSecurityParameters : IAsnSerializable
     {
-        public Memory<byte> AuthoritativeEngineId { get; set; }
+        public Memory<byte> EngineId { get; set; }
 
-        public int AuthoritativeEngineBoots { get; set; }
+        public int EngineBoots { get; set; }
 
-        public int AuthoritativeEngineTime { get; set; }
+        public int EngineTime { get; set; }
 
-        public string UserName { get; set; }
+        public string SecurityName { get; set; }
 
-        public IAuthenticationService? AuthenticationService { get; set; }
+        public AuthenticationProtocol AuthenticationProtocol { get; set; } 
+            = AuthenticationProtocol.None;
 
-        public IPrivacyService? PrivacyService { get; set; }
+        public PrivacyProtocol PrivacyProtocol { get; set; }
+            = PrivacyProtocol.None;
 
         public Memory<byte> AuthParams { get; set; } = Memory<byte>.Empty;
 
@@ -30,41 +32,34 @@ namespace SnmpDotNet.Protocol.V3.Security
 
             using (_ = innerSeq.PushSequence())
             {
-                innerSeq.WriteOctetString(AuthoritativeEngineId.Span);
+                innerSeq.WriteOctetString(EngineId.Span);
 
-                innerSeq.WriteInteger(AuthoritativeEngineBoots);
+                innerSeq.WriteInteger(EngineBoots);
 
-                innerSeq.WriteInteger(AuthoritativeEngineTime);
+                innerSeq.WriteInteger(EngineTime);
 
                 innerSeq.WriteOctetString(
-                    Encoding.UTF8.GetBytes(UserName));
+                    Encoding.UTF8.GetBytes(SecurityName));
                 
-                if (AuthenticationService != null)
+                if (AuthenticationProtocol != AuthenticationProtocol.None)
                 {
                     if (AuthParams.IsEmpty)
                     {
-                        AuthParams = new byte[AuthenticationService.TruncatedDigestSize];
+                        var authParamsSize = AuthenticationProtocol.TruncatedDigestSize();
+                        AuthParams = new byte[authParamsSize];
                     }
-                    
-                    innerSeq.WriteOctetString(AuthParams.Span);
-                }   
-                else
-                {
-                    innerSeq.WriteOctetString(Span<byte>.Empty);
                 }
 
-                if (PrivacyService != null)
+                innerSeq.WriteOctetString(AuthParams.Span);
+
+                if (PrivacyProtocol != PrivacyProtocol.None)
                 {
                     if (PrivParams.IsEmpty)
                     {
-                        PrivParams = new byte[PrivacyService.PrivacyParametersLength];
+                        // PrivParams = new byte[0]; // TODO
                     }
-                    innerSeq.WriteOctetString(PrivParams.Span);
                 }
-                else
-                {
-                    innerSeq.WriteOctetString(Span<byte>.Empty);
-                }
+                innerSeq.WriteOctetString(PrivParams.Span);
             }
 
             var innerSequence = innerSeq.Encode();
@@ -94,10 +89,10 @@ namespace SnmpDotNet.Protocol.V3.Security
 
             return new()
             {
-                AuthoritativeEngineId = engineId,
-                AuthoritativeEngineBoots = engineBoots,
-                AuthoritativeEngineTime = engineTime,
-                UserName = Encoding.UTF8.GetString(userName),
+                EngineId = engineId,
+                EngineBoots = engineBoots,
+                EngineTime = engineTime,
+                SecurityName = Encoding.UTF8.GetString(userName),
                 AuthParams = authParams,
                 PrivParams = privParams
             };
