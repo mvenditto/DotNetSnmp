@@ -47,6 +47,14 @@ namespace SnmpDotNet.Protocol.V1
             {
                 pdu = GetResponsePdu.ReadFrom(rootSeq);
             }
+            else if (pduType == SnmpAsnTags.GetMsg)
+            {
+                pdu = GetRequestPdu.ReadFrom(rootSeq);
+            }
+            else if (pduType == SnmpAsnTags.GetNextMsg)
+            {
+                pdu = GetNextRequestPdu.ReadFrom(rootSeq);
+            }
             else if (pduType == SnmpAsnTags.BulkMsg)
             {
                 throw new NotImplementedException();
