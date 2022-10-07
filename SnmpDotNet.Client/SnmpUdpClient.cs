@@ -2,6 +2,8 @@
 using SnmpDotNet.Protocol.V1;
 using SnmpDotNet.Protocol.V3;
 using SnmpDotNet.Protocol.V3.Security;
+using SnmpDotNet.Protocol.V3.Security.Authentication;
+using SnmpDotNet.Protocol.V3.Security.Privacy;
 using System.Buffers;
 using System.Formats.Asn1;
 using System.Net;
@@ -33,7 +35,7 @@ namespace SnmpDotNet.Client
             _asnWriter = new AsnWriter(AsnEncodingRules.BER);
         }
 
-        public async Task<byte[]> SendAsync(
+        public async Task<SnmpMessage> SendAsync(
             SnmpMessage message, 
             CancellationToken cancellationToken = default)
         {
@@ -53,28 +55,54 @@ namespace SnmpDotNet.Client
             {
                 var v3Message = (SnmpV3Message) message;
                 var usm = v3Message.SecurityParameters;
-                var authService = usm.AuthenticationService;
+                var authProto = usm.AuthenticationProtocol;
 
-                if (v3Message.GlobalData.MsgFlags.HasFlag(MsgFlags.Auth) && authService != null)
+                using var hash = IncrementalHash.CreateHash(HashAlgorithmName.MD5);
+
+                var authKey = new byte[hash.HashLengthInBytes];
+
+                KeyUtils.GenerateLocalizedKey(
+                    "Password1".GetBytesMemoryOrDefault(Encoding.UTF8),
+                    usm.EngineId,
+                    hash,
+                    authKey
+                );
+                /*
+                if (v3Message.GlobalData.MsgFlags.HasFlag(MsgFlags.Priv))
                 {
-                    using var hash = IncrementalHash.CreateHash(HashAlgorithmName.MD5);
+                    var privProto = usm.PrivacyProtocol;
 
-                    if (usm.AuthParams.IsEmpty)
+                    var privService = new DESPrivacyService(authKey, usm.EngineBoots);
+
+                    if (usm.PrivParams.IsEmpty)
                     {
-                        usm.AuthParams = new byte[authService.TruncatedDigestSize];
+                        usm.PrivParams = new byte[8];
                     }
 
-                    var authKey = new byte[hash.HashLengthInBytes];
+                    var scopedPduWriter = new AsnWriter(AsnEncodingRules.BER);
+                    v3Message.WriteTo(scopedPduWriter);
+                    var data = scopedPduWriter.Encode();
 
-                    KeyUtils.GenerateLocalizedKey(
-                        "Password1".GetBytesMemoryOrDefault(Encoding.UTF8),
-                        usm.AuthoritativeEngineId,
-                        hash,
-                        authKey
-                    );
+                    v3Message.EncryptedScopedPdu = new byte[16];
+
+                    var n = privService.EncryptScopedPdu(
+                        data,
+                        usm.PrivParams.Span, 
+                        v3Message.EncryptedScopedPdu.Span);
+                }*/
+
+                if (v3Message.GlobalData.MsgFlags.HasFlag(MsgFlags.Auth) 
+                    && authProto != AuthenticationProtocol.None)
+                {
+                    
+                    if (usm.AuthParams.IsEmpty)
+                    {
+                        usm.AuthParams = new byte[authProto.TruncatedDigestSize()];
+                    }
+
+                    var authService = new AuthenticationService(authProto, authKey);
 
                     await authService.AuthenticateOutgoingMsg(
-                        authKey, 
                         serializedMsg.Span, 
                         usm.AuthParams.Span);
 
@@ -92,32 +120,42 @@ namespace SnmpDotNet.Client
 
             var recvResult = await _udpClient.ReceiveAsync(cancellationToken);
 
-            return recvResult.Buffer;
+            var reader = new AsnReader(recvResult.Buffer, AsnEncodingRules.BER);
+
+            SnmpMessage msg = message.ProtocolVersion switch
+            {
+                ProtocolVersion.SnmpV1 
+                    => SnmpV1Message.ReadFrom(reader),
+                ProtocolVersion.SnmpV2c 
+                    => SnmpV2Message.ReadFrom(reader),
+                ProtocolVersion.SnmpV3 
+                    => SnmpV3Message.ReadFrom(reader),
+                _ => throw new NotImplementedException(),
+            };
+
+            return msg;
         }
 
         public async Task<GetResponsePdu> GetAsync(
             SnmpMessage message,
             CancellationToken cancellationToken = default)
         {
-            var data = await SendAsync(
+            var responseMsg = await SendAsync(
                 message, 
                 cancellationToken).ConfigureAwait(false);
 
-            var reader = new AsnReader(data, AsnEncodingRules.BER);
-
-            var msgSeq = reader.ReadSequence();
-
-            msgSeq.TryReadInt32(out var msgVersion);
-
-            var version = (ProtocolVersion)msgVersion;
-
-            if (version == ProtocolVersion.SnmpV1
-                || version == ProtocolVersion.SnmpV2c)
+            if (responseMsg is SnmpV1Message msg1) 
             {
-                var community = msgSeq.ReadOctetString();
-            }    
-
-            return GetResponsePdu.ReadFrom(msgSeq);
+                return (GetResponsePdu) msg1.Pdu;
+            }
+            else if (responseMsg is SnmpV2Message msg2)
+            {
+                return (GetResponsePdu) msg2.Pdu;
+            }
+            else
+            {
+                return (GetResponsePdu) ((SnmpV3Message)responseMsg).ScopedPdu.Pdu;
+            }
         }
         public Task<GetResponsePdu> GetNext(
             SnmpMessage message,
