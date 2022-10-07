@@ -55,6 +55,10 @@ namespace SnmpDotNet.Protocol.V1
             {
                 pdu = GetRequestPdu.ReadFrom(rootSeq);
             }
+            else if (pduType == SnmpAsnTags.GetNextMsg)
+            {
+                pdu = GetNextRequestPdu.ReadFrom(rootSeq);
+            }
 
             return new SnmpV1Message
             {
