@@ -7,8 +7,8 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
     {
         public void WriteTo(AsnWriter writer)
         {
-            writer.WriteIntegerUnsigned(
-                BitConverter.GetBytes(Value),
+            writer.WriteInteger(
+                Value,
                 tag: AsnTypes.Integer32);
         }
 
