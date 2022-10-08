@@ -3,6 +3,7 @@ using SnmpDotNet.Protocol.V3;
 using SnmpDotNet.Protocol.V3.Security;
 using SnmpDotNet.Protocol.V3.Security.Authentication;
 using SnmpDotNet.Test.Helpers.XUnit.Project.Attributes;
+using System.Diagnostics;
 using System.Formats.Asn1;
 using System.Security.Cryptography;
 using System.Text;
@@ -177,6 +178,68 @@ namespace SnmpDotNet.Test
             await md5Auth.AuthenticateOutgoingMsg(encoded, calculatedAuthParams);
 
             Assert.True(calculatedAuthParams.SequenceEqual(authParams));
+        }
+
+        [Fact, TestPriority(3)]
+        public async void EncodeDecodeGetResponse_AuthNoPriv_MD5()
+        {
+            var dump = @"Received 149 byte packet from UDP: [127.0.0.1]:161->[0.0.0.0]:38596
+                0000: 30 81 92 02  01 03 30 11  02 04 27 8D  F9 98 02 03    0.....0...'.....
+                0016: 00 FF E3 04  01 01 02 01  03 04 3D 30  3B 04 17 80    ..........=0;...
+                0032: 00 1F 88 04  38 30 30 30  30 30 30 32  30 31 30 39    ....800000020109
+                0048: 38 34 30 33  30 31 02 01  01 02 01 0A  04 0A 75 73    840301........us
+                0064: 72 5F 76 33  5F 4D 44 35  04 0C F6 36  DF 50 9F 03    r_v3_MD5...6.P..
+                0080: FA C3 BA A9  B9 57 04 00  30 3B 04 17  80 00 1F 88    .....W..0;......
+                0096: 04 38 30 30  30 30 30 30  32 30 31 30  39 38 34 30    .800000020109840
+                0112: 33 30 31 04  00 A2 1E 02  04 48 AA 65  4A 02 01 00    301......H.eJ...
+                0128: 02 01 00 30  10 30 0E 06  08 2B 06 01  02 01 01 03    ...0.0...+......
+                0144: 00 43 02 03  C5                                       .C...";
+
+            var messageBytes = Dump.BytesFromHexString(dump);
+
+            var reader = new AsnReader(messageBytes, AsnEncodingRules.BER);
+
+            var message = SnmpV3Message.ReadFrom(reader);
+
+            Assert.NotNull(message);
+
+            Assert.Equal(
+                ProtocolVersion.SnmpV3,
+                message.ProtocolVersion);
+
+            Assert.True(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Auth));
+
+            Assert.False(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Priv));
+
+            var usmSecParams = message.SecurityParameters;
+
+            Assert.NotNull(usmSecParams);
+
+            _engineId = usmSecParams.EngineId.ToArray();
+
+            Assert.NotEmpty(_engineId);
+
+            Assert.Equal(_engineId, Convert.FromBase64String(EngineIdBase64));
+
+            Assert.Equal(12, message.SecurityParameters.AuthParams.Length);
+
+            var authParams = new byte[12];
+
+            message.SecurityParameters.AuthParams.CopyTo(authParams);
+
+            message.SecurityParameters.AuthParams.Span.Fill(0x0);
+
+            var writer = new AsnWriter(AsnEncodingRules.BER);
+            message.WriteTo(writer);
+            var encoded = writer.Encode();
+
+            var md5Auth = new AuthenticationService(
+                AuthenticationProtocol.Md5,
+                GetAuthKey(_engineId));
+
+            var authenticated = await md5Auth.AuthenticateIncomingMsg(encoded, authParams);
+
+            Assert.True(authenticated);
         }
     }
 }
