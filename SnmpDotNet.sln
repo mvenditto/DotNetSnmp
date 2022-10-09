@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Client", "SnmpDo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples", "SnmpDotNet.Samples\SnmpDotNet.Samples.csproj", "{20B48EA9-A2E5-4D00-9BF4-C7D02D36E11D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnmpDotNet.Test", "SnmpDotNet.Test\SnmpDotNet.Test.csproj", "{356050AD-3824-4CE4-B83A-A3E50FF328A8}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +51,6 @@ Global
 		{20B48EA9-A2E5-4D00-9BF4-C7D02D36E11D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20B48EA9-A2E5-4D00-9BF4-C7D02D36E11D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20B48EA9-A2E5-4D00-9BF4-C7D02D36E11D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{356050AD-3824-4CE4-B83A-A3E50FF328A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{356050AD-3824-4CE4-B83A-A3E50FF328A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{356050AD-3824-4CE4-B83A-A3E50FF328A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{356050AD-3824-4CE4-B83A-A3E50FF328A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

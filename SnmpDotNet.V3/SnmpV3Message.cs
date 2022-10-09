@@ -1,7 +1,6 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
 using SnmpDotNet.Common.Definitions;
 using SnmpDotNet.Protocol.V3.Security;
-using SnmpDotNet.V3.Security.Privacy;
 using System.Formats.Asn1;
 
 namespace SnmpDotNet.Protocol.V3
@@ -16,8 +15,6 @@ namespace SnmpDotNet.Protocol.V3
 
         public ScopedPdu ScopedPdu { get; set; }
 
-        public Memory<byte> EncryptedScopedPdu { get; set; } = Memory<byte>.Empty;
-
         public override void WriteTo(AsnWriter writer)
         {
             using (_ = writer.PushSequence())
@@ -29,15 +26,7 @@ namespace SnmpDotNet.Protocol.V3
 
                 SecurityParameters.WriteTo(writer);
 
-                if (EncryptedScopedPdu.IsEmpty)
-                {
-                    ScopedPdu.WriteTo(writer);
-                }
-                else
-                {
-                    writer.WriteOctetString(
-                        EncryptedScopedPdu.Span);
-                }
+                ScopedPdu.WriteTo(writer);
             }
         }
 
