@@ -17,6 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Client", "SnmpDo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples", "SnmpDotNet.Samples\SnmpDotNet.Samples.csproj", "{20B48EA9-A2E5-4D00-9BF4-C7D02D36E11D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{70D0F542-0474-48CB-A968-5441107E1C5F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		codecov.exe = codecov.exe
+		upload_coverage.bat = upload_coverage.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
