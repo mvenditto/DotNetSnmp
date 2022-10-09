@@ -357,5 +357,49 @@ namespace SnmpDotNet.Test
                  AuthenticationProtocol.Sha256,
                  dump);
         }
+
+        [Fact, TestPriority(8)]
+        public async void EncodeDecodeGetRequet_AuthNoPriv_SHA384()
+        {
+            var dump = @"Sending 170 bytes to UDP: [127.0.0.1]:161->[0.0.0.0]:0
+                0000: 30 81 A7 02  01 03 30 10  02 04 1B E8  12 D7 02 02    0.....0.........
+                0016: 05 C0 04 01  05 02 01 03  04 55 30 53  04 17 80 00    .........U0S....
+                0032: 1F 88 04 38  30 30 30 30  30 30 32 30  31 30 39 38    ...8000000201098
+                0048: 34 30 33 30  31 02 01 12  02 02 0D 55  04 0D 75 73    40301......U..us
+                0064: 72 5F 76 33  5F 53 48 41  33 38 34 04  20 E8 F3 B6    r_v3_SHA384.....
+                0080: 3D 1D 4C 9C  33 2F 46 EE  B2 42 C6 1F  76 4A 39 56    =.L.3/F..B..vJ9V
+                0096: 6D 18 72 C8  90 51 EB EA  E0 D5 1E FD  14 04 00 30    m.r..Q.........0
+                0112: 39 04 17 80  00 1F 88 04  38 30 30 30  30 30 30 32    9.......80000002
+                0128: 30 31 30 39  38 34 30 33  30 31 04 00  A0 1C 02 04    0109840301......
+                0144: 45 4B 70 68  02 01 00 02  01 00 30 0E  30 0C 06 08    EKph......0.0...
+                0160: 2B 06 01 02  01 01 03 00  05 00                       +.........";
+
+            await TestOutgoingAuthNoPriv(
+                 HashAlgorithmName.SHA384,
+                 AuthenticationProtocol.Sha384,
+                 dump);
+        }
+
+        [Fact, TestPriority(9)]
+        public async void EncodeDecodeGetResponse_AuthNoPriv_SHA384()
+        {
+            var dump = @"Received 173 byte packet from UDP: [127.0.0.1]:161->[0.0.0.0]:56250
+                0000: 30 81 AA 02  01 03 30 10  02 04 1B E8  12 D7 02 02    0.....0.........
+                0016: 05 C0 04 01  01 02 01 03  04 55 30 53  04 17 80 00    .........U0S....
+                0032: 1F 88 04 38  30 30 30 30  30 30 32 30  31 30 39 38    ...8000000201098
+                0048: 34 30 33 30  31 02 01 12  02 02 0D 55  04 0D 75 73    40301......U..us
+                0064: 72 5F 76 33  5F 53 48 41  33 38 34 04  20 E6 87 B5    r_v3_SHA384.....
+                0080: 8D B4 FB A5  56 D8 83 65  24 D1 FA AC  DB FE 98 66    ....V..e$......f
+                0096: D3 94 0B 4F  F4 F2 9A 46  01 EA 5B CD  A9 04 00 30    ...O...F..[....0
+                0112: 3C 04 17 80  00 1F 88 04  38 30 30 30  30 30 30 32    <.......80000002
+                0128: 30 31 30 39  38 34 30 33  30 31 04 00  A2 1F 02 04    0109840301......
+                0144: 45 4B 70 68  02 01 00 02  01 00 30 11  30 0F 06 08    EKph......0.0...
+                0160: 2B 06 01 02  01 01 03 00  43 03 05 35  1F             +.......C..5.";
+
+            await TestIncomingAuthNoPriv(
+                 HashAlgorithmName.SHA384,
+                 AuthenticationProtocol.Sha384,
+                 dump);
+        }
     }
 }
