@@ -3,6 +3,7 @@ using SnmpDotNet.Protocol.V3;
 using SnmpDotNet.Protocol.V3.Security;
 using SnmpDotNet.Protocol.V3.Security.Authentication;
 using SnmpDotNet.Test.Helpers.XUnit.Project.Attributes;
+using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,6 +13,7 @@ using Xunit;
 
 namespace SnmpDotNet.Test
 {
+    [ExcludeFromCodeCoverage]
     [TestCaseOrderer("XUnit.Project.Orderers.PriorityOrderer", "XUnit.Project")]
     public class AuthenticationTest
     {

@@ -1,11 +1,13 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
 using SnmpDotNet.Asn1.SyntaxObjects;
+using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
 using System.Text;
 using Xunit;
 
 namespace SnmpDotNet.Test
 {
+    [ExcludeFromCodeCoverage] 
     public class TypesEncodeDecode
     {
         private static AsnReader GetReader(string berHexString)

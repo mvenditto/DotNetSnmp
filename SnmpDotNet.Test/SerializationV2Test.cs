@@ -2,6 +2,7 @@
 using SnmpDotNet.Asn1.SyntaxObjects;
 using SnmpDotNet.Common.Definitions;
 using SnmpDotNet.Protocol.V1;
+using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
 using System.Text;
 using Xunit;
@@ -15,6 +16,7 @@ namespace SnmpDotNet.Test
     ///   2. test that the decoded message matches the expected (known) values
     ///   3. encode the decoded message and compare to the original serialized BER bytes
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class SerializationV2Test
     {
         [Fact]
