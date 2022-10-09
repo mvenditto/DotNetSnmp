@@ -1,4 +1,5 @@
-﻿using SnmpDotNet.Asn1.SyntaxObjects;
+﻿using SnmpDotNet.Asn1.Serialization;
+using SnmpDotNet.Asn1.SyntaxObjects;
 using SnmpDotNet.Common.Definitions;
 using SnmpDotNet.Protocol.V1;
 using System.Formats.Asn1;
@@ -16,6 +17,24 @@ namespace SnmpDotNet.Test
     /// </summary>
     public class SerializationV2Test
     {
+        [Fact]
+        public void ShouldThrowDecodeExceptionOnWrongSnmpVersion()
+        {
+            var dump = @"Sending 43 bytes to UDP: [127.0.0.1]:161->[0.0.0.0]:0
+                0000: 30 29 02 01  00 04 06 70  75 62 6C 69  63 A0 1C 02    0).....public...
+                0016: 04 0C BB 47  10 02 01 00  02 01 00 30  0E 30 0C 06    ...G.......0.0..
+                0032: 08 2B 06 01  02 01 01 01  00 05 00                    .+.........";
+
+            var messageBytes = Dump.BytesFromHexString(dump);
+
+            var reader = new AsnReader(messageBytes, AsnEncodingRules.BER);
+
+            Assert.Throws<SnmpDecodeException>(() =>
+            {
+                _ = SnmpV2Message.ReadFrom(reader);
+            });
+        }
+
         [Fact]
         public void DecodeEncodeV2GetRequestMessage()
         {
