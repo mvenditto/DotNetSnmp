@@ -14,8 +14,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         {
             var writer2 = new AsnWriter(AsnEncodingRules.BER);
 
-            writer2.WriteIntegerUnsigned(
-                BitConverter.GetBytes(Value),
+            writer2.WriteInteger(Value,
                 tag: AsnTypes.OpaqueCounter64);
 
             writer.WriteOctetString(

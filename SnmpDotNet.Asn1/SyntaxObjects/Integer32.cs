@@ -17,6 +17,12 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             value = Value;
         }
 
+        public static Integer32 ReadFrom(AsnReader reader)
+        {
+            reader.TryReadInt32(out var value);
+            return new(value);
+        }
+
         public static implicit operator int(Integer32 x) => x.Value;
     }
 }

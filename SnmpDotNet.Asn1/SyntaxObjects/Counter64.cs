@@ -12,6 +12,14 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
                 tag: AsnTypes.Counter64);
         }
 
+        public static Counter64 ReadFrom(AsnReader reader)
+        {
+            reader.TryReadUInt64(
+                out var value,
+                expectedTag: AsnTypes.Counter64);
+            return new(value);
+        }
+
         public void Deconstruct(out ulong value)
         {
             value = Value;
