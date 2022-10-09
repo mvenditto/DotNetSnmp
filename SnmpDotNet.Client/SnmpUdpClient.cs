@@ -1,9 +1,9 @@
 ﻿using SnmpDotNet.Common.Definitions;
 using SnmpDotNet.Protocol.V1;
+using SnmpDotNet.Protocol.V2;
 using SnmpDotNet.Protocol.V3;
 using SnmpDotNet.Protocol.V3.Security;
 using SnmpDotNet.Protocol.V3.Security.Authentication;
-using SnmpDotNet.Protocol.V3.Security.Privacy;
 using System.Buffers;
 using System.Formats.Asn1;
 using System.Net;

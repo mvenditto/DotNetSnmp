@@ -1,9 +1,10 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
 using SnmpDotNet.Common.Definitions;
+using SnmpDotNet.Protocol.V1;
 using System.Formats.Asn1;
 using System.Text;
 
-namespace SnmpDotNet.Protocol.V1
+namespace SnmpDotNet.Protocol.V2
 {
     public class SnmpV2Message: SnmpV1Message
     {

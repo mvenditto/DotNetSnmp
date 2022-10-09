@@ -2,6 +2,7 @@
 using SnmpDotNet.Asn1.SyntaxObjects;
 using SnmpDotNet.Common.Definitions;
 using SnmpDotNet.Protocol.V1;
+using SnmpDotNet.Protocol.V2;
 using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
 using System.Text;
