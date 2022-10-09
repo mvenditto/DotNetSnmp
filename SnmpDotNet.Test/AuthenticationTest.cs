@@ -118,21 +118,12 @@ namespace SnmpDotNet.Test
                 Convert.FromBase64String(EngineIdBase64)));
         }
 
-        [Fact, TestPriority(2)]
-        public async void EncodeDecodeGetRequest_AuthNoPriv_MD5()
-        {
-            var dump = @"Sending 146 bytes to UDP: [127.0.0.1]:161->[0.0.0.0]:0
-                0000: 30 81 8F 02  01 03 30 10  02 04 51 06  5D 15 02 02    0.....0...Q.]...
-                0016: 05 C0 04 01  05 02 01 03  04 3D 30 3B  04 17 80 00    .........=0;....
-                0032: 1F 88 04 38  30 30 30 30  30 30 32 30  31 30 39 38    ...8000000201098
-                0048: 34 30 33 30  31 02 01 01  02 01 17 04  0A 75 73 72    40301........usr
-                0064: 5F 76 33 5F  4D 44 35 04  0C 44 4F CF  E5 51 A7 EF    _v3_MD5..DO..Q..
-                0080: 91 3E FB A3  AD 04 00 30  39 04 17 80  00 1F 88 04    .>.....09.......
-                0096: 38 30 30 30  30 30 30 32  30 31 30 39  38 34 30 33    8000000201098403
-                0112: 30 31 04 00  A0 1C 02 04  4E ED B6 34  02 01 00 02    01......N..4....
-                0128: 01 00 30 0E  30 0C 06 08  2B 06 01 02  01 01 03 00    ..0.0...+.......
-                0144: 05 00                                                 ..";
 
+        private async Task TestOutgoingAuthNoPriv(
+            HashAlgorithmName hashAlgorithm,
+            AuthenticationProtocol authProto,
+            string dump)
+        {
             var messageBytes = Dump.BytesFromHexString(dump);
 
             var reader = new AsnReader(messageBytes, AsnEncodingRules.BER);
@@ -159,10 +150,18 @@ namespace SnmpDotNet.Test
 
             Assert.Equal(_engineId, Convert.FromBase64String(EngineIdBase64));
 
-            Assert.Equal(12, message.SecurityParameters.AuthParams.Length);
+            var authSerivice = new AuthenticationService(
+                authProto,
+                GetAuthKey(_engineId, hashAlgorithm));
 
-            var authParams = new byte[12];
-            var calculatedAuthParams = new byte[12];
+            var authParamsLen = authSerivice.TruncatedDigestSize;
+
+            Assert.Equal(
+                authParamsLen, 
+                message.SecurityParameters.AuthParams.Length);
+
+            var authParams = new byte[authParamsLen];
+            var calculatedAuthParams = new byte[authParamsLen];
 
             message.SecurityParameters.AuthParams.CopyTo(authParams);
 
@@ -172,13 +171,84 @@ namespace SnmpDotNet.Test
             message.WriteTo(writer);
             var encoded = writer.Encode();
 
-            var md5Auth = new AuthenticationService(
-                AuthenticationProtocol.Md5, 
-                GetAuthKey(_engineId));
-
-            await md5Auth.AuthenticateOutgoingMsg(encoded, calculatedAuthParams);
+            await authSerivice.AuthenticateOutgoingMsg(encoded, calculatedAuthParams);
 
             Assert.True(calculatedAuthParams.SequenceEqual(authParams));
+        }
+
+        private async Task TestIncomingAuthNoPriv(
+            HashAlgorithmName hashAlgorithm,
+            AuthenticationProtocol authProto,
+            string dump)
+        {
+            var messageBytes = Dump.BytesFromHexString(dump);
+
+            var reader = new AsnReader(messageBytes, AsnEncodingRules.BER);
+
+            var message = SnmpV3Message.ReadFrom(reader);
+
+            Assert.NotNull(message);
+
+            Assert.Equal(
+                ProtocolVersion.SnmpV3,
+                message.ProtocolVersion);
+
+            Assert.True(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Auth));
+
+            Assert.False(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Priv));
+
+            var usmSecParams = message.SecurityParameters;
+
+            Assert.NotNull(usmSecParams);
+
+            _engineId = usmSecParams.EngineId.ToArray();
+
+            Assert.NotEmpty(_engineId);
+
+            Assert.Equal(_engineId, Convert.FromBase64String(EngineIdBase64));
+
+            var authService = new AuthenticationService(
+                authProto,
+                GetAuthKey(_engineId, hashAlgorithm));
+
+            var authParamsLen = authService.TruncatedDigestSize;
+
+            Assert.Equal(authParamsLen, message.SecurityParameters.AuthParams.Length);
+
+            var authParams = new byte[authParamsLen];
+
+            message.SecurityParameters.AuthParams.CopyTo(authParams);
+
+            message.SecurityParameters.AuthParams.Span.Fill(0x0);
+
+            var writer = new AsnWriter(AsnEncodingRules.BER);
+            message.WriteTo(writer);
+            var encoded = writer.Encode();
+
+            var authenticated = await authService.AuthenticateIncomingMsg(encoded, authParams);
+
+            Assert.True(authenticated);
+        }
+
+        [Fact, TestPriority(2)]
+        public async void EncodeDecodeGetRequest_AuthNoPriv_MD5()
+        {
+            var dump = @"Sending 146 bytes to UDP: [127.0.0.1]:161->[0.0.0.0]:0
+                0000: 30 81 8F 02  01 03 30 10  02 04 51 06  5D 15 02 02    0.....0...Q.]...
+                0016: 05 C0 04 01  05 02 01 03  04 3D 30 3B  04 17 80 00    .........=0;....
+                0032: 1F 88 04 38  30 30 30 30  30 30 32 30  31 30 39 38    ...8000000201098
+                0048: 34 30 33 30  31 02 01 01  02 01 17 04  0A 75 73 72    40301........usr
+                0064: 5F 76 33 5F  4D 44 35 04  0C 44 4F CF  E5 51 A7 EF    _v3_MD5..DO..Q..
+                0080: 91 3E FB A3  AD 04 00 30  39 04 17 80  00 1F 88 04    .>.....09.......
+                0096: 38 30 30 30  30 30 30 32  30 31 30 39  38 34 30 33    8000000201098403
+                0112: 30 31 04 00  A0 1C 02 04  4E ED B6 34  02 01 00 02    01......N..4....
+                0128: 01 00 30 0E  30 0C 06 08  2B 06 01 02  01 01 03 00    ..0.0...+.......
+                0144: 05 00                                                 ..";
+
+            await TestOutgoingAuthNoPriv(
+                HashAlgorithmName.MD5, 
+                AuthenticationProtocol.Md5, 
+                dump);
         }
 
         [Fact, TestPriority(3)]
@@ -196,51 +266,10 @@ namespace SnmpDotNet.Test
                 0128: 02 01 00 30  10 30 0E 06  08 2B 06 01  02 01 01 03    ...0.0...+......
                 0144: 00 43 02 03  C5                                       .C...";
 
-            var messageBytes = Dump.BytesFromHexString(dump);
-
-            var reader = new AsnReader(messageBytes, AsnEncodingRules.BER);
-
-            var message = SnmpV3Message.ReadFrom(reader);
-
-            Assert.NotNull(message);
-
-            Assert.Equal(
-                ProtocolVersion.SnmpV3,
-                message.ProtocolVersion);
-
-            Assert.True(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Auth));
-
-            Assert.False(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Priv));
-
-            var usmSecParams = message.SecurityParameters;
-
-            Assert.NotNull(usmSecParams);
-
-            _engineId = usmSecParams.EngineId.ToArray();
-
-            Assert.NotEmpty(_engineId);
-
-            Assert.Equal(_engineId, Convert.FromBase64String(EngineIdBase64));
-
-            Assert.Equal(12, message.SecurityParameters.AuthParams.Length);
-
-            var authParams = new byte[12];
-
-            message.SecurityParameters.AuthParams.CopyTo(authParams);
-
-            message.SecurityParameters.AuthParams.Span.Fill(0x0);
-
-            var writer = new AsnWriter(AsnEncodingRules.BER);
-            message.WriteTo(writer);
-            var encoded = writer.Encode();
-
-            var md5Auth = new AuthenticationService(
-                AuthenticationProtocol.Md5,
-                GetAuthKey(_engineId));
-
-            var authenticated = await md5Auth.AuthenticateIncomingMsg(encoded, authParams);
-
-            Assert.True(authenticated);
+            await TestIncomingAuthNoPriv(
+                HashAlgorithmName.MD5, 
+                AuthenticationProtocol.Md5, 
+                dump);
         }
 
         [Fact, TestPriority(4)]
@@ -258,52 +287,10 @@ namespace SnmpDotNet.Test
                 0128: 01 00 30 0E  30 0C 06 08  2B 06 01 02  01 01 03 00    ..0.0...+.......
                 0144: 05 00 .";
 
-            var messageBytes = Dump.BytesFromHexString(dump);
-
-            var reader = new AsnReader(messageBytes, AsnEncodingRules.BER);
-
-            var message = SnmpV3Message.ReadFrom(reader);
-
-            Assert.NotNull(message);
-
-            Assert.Equal(
-                ProtocolVersion.SnmpV3,
-                message.ProtocolVersion);
-
-            Assert.True(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Auth));
-
-            Assert.False(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Priv));
-
-            var usmSecParams = message.SecurityParameters;
-
-            Assert.NotNull(usmSecParams);
-
-            _engineId = usmSecParams.EngineId.ToArray();
-
-            Assert.NotEmpty(_engineId);
-
-            Assert.Equal(_engineId, Convert.FromBase64String(EngineIdBase64));
-
-            Assert.Equal(12, message.SecurityParameters.AuthParams.Length);
-
-            var authParams = new byte[12];
-            var calculatedAuthParams = new byte[12];
-
-            message.SecurityParameters.AuthParams.CopyTo(authParams);
-
-            message.SecurityParameters.AuthParams.Span.Fill(0x0);
-
-            var writer = new AsnWriter(AsnEncodingRules.BER);
-            message.WriteTo(writer);
-            var encoded = writer.Encode();
-
-            var md5Auth = new AuthenticationService(
-                AuthenticationProtocol.Sha1,
-                GetAuthKey(_engineId, HashAlgorithmName.SHA1));
-
-            await md5Auth.AuthenticateOutgoingMsg(encoded, calculatedAuthParams);
-
-            Assert.True(calculatedAuthParams.SequenceEqual(authParams));
+            await TestOutgoingAuthNoPriv(
+                 HashAlgorithmName.SHA1,
+                 AuthenticationProtocol.Sha1,
+                 dump);
         }
 
         [Fact, TestPriority(5)]
@@ -321,51 +308,54 @@ namespace SnmpDotNet.Test
                 0128: 01 00 30 10  30 0E 06 08  2B 06 01 02  01 01 03 00    ..0.0...+.......
                 0144: 43 02 01 80 C...";
 
-            var messageBytes = Dump.BytesFromHexString(dump);
+            await TestIncomingAuthNoPriv(
+                 HashAlgorithmName.SHA1,
+                 AuthenticationProtocol.Sha1,
+                 dump);
+        }
 
-            var reader = new AsnReader(messageBytes, AsnEncodingRules.BER);
+        [Fact, TestPriority(6)]
+        public async void EncodeDecodeGetRequet_AuthNoPriv_SHA256()
+        {
+            var dump = @"Sending 162 bytes to UDP: [127.0.0.1]:161->[0.0.0.0]:0
+                0000: 30 81 9F 02  01 03 30 10  02 04 4C EF  12 0D 02 02    0.....0...L.....
+                0016: 05 C0 04 01  05 02 01 03  04 4D 30 4B  04 17 80 00    .........M0K....
+                0032: 1F 88 04 38  30 30 30 30  30 30 32 30  31 30 39 38    ...8000000201098
+                0048: 34 30 33 30  31 02 01 12  02 02 03 AC  04 0D 75 73    40301.........us
+                0064: 72 5F 76 33  5F 53 48 41  32 35 36 04  18 BB 96 E3    r_v3_SHA256.....
+                0080: 59 DD EA 5A  43 80 67 E9  A9 92 F5 6D  32 BD 40 3A    Y..ZC.g....m2.@:
+                0096: 4B 2E 09 A7  9B 04 00 30  39 04 17 80  00 1F 88 04    K......09.......
+                0112: 38 30 30 30  30 30 30 32  30 31 30 39  38 34 30 33    8000000201098403
+                0128: 30 31 04 00  A0 1C 02 04  6D 93 9F BB  02 01 00 02    01......m.......
+                0144: 01 00 30 0E  30 0C 06 08  2B 06 01 02  01 01 03 00    ..0.0...+.......
+                0160: 05 00                                                 ..";
 
-            var message = SnmpV3Message.ReadFrom(reader);
+            await TestOutgoingAuthNoPriv(
+                 HashAlgorithmName.SHA256,
+                 AuthenticationProtocol.Sha256,
+                 dump);
+        }
 
-            Assert.NotNull(message);
+        [Fact, TestPriority(7)]
+        public async void EncodeDecodeGetResponse_AuthNoPriv_SHA256()
+        {
+            var dump = @"Received 165 byte packet from UDP: [127.0.0.1]:161->[0.0.0.0]:44990
+                0000: 30 81 A2 02  01 03 30 10  02 04 4C EF  12 0D 02 02    0.....0...L.....
+                0016: 05 C0 04 01  01 02 01 03  04 4D 30 4B  04 17 80 00    .........M0K....
+                0032: 1F 88 04 38  30 30 30 30  30 30 32 30  31 30 39 38    ...8000000201098
+                0048: 34 30 33 30  31 02 01 12  02 02 03 AC  04 0D 75 73    40301.........us
+                0064: 72 5F 76 33  5F 53 48 41  32 35 36 04  18 CB E3 A8    r_v3_SHA256.....
+                0080: 68 32 C1 39  32 F7 11 D3  AC 63 56 C7  36 12 3D BE    h2.92....cV.6.=.
+                0096: DC DD EB C4  41 04 00 30  3C 04 17 80  00 1F 88 04    ....A..0<.......
+                0112: 38 30 30 30  30 30 30 32  30 31 30 39  38 34 30 33    8000000201098403
+                0128: 30 31 04 00  A2 1F 02 04  6D 93 9F BB  02 01 00 02    01......m.......
+                0144: 01 00 30 11  30 0F 06 08  2B 06 01 02  01 01 03 00    ..0.0...+.......
+                0160: 43 03 01 6F  58                                       C..oX";
 
-            Assert.Equal(
-                ProtocolVersion.SnmpV3,
-                message.ProtocolVersion);
-
-            Assert.True(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Auth));
-
-            Assert.False(message.GlobalData.MsgFlags.HasFlag(MsgFlags.Priv));
-
-            var usmSecParams = message.SecurityParameters;
-
-            Assert.NotNull(usmSecParams);
-
-            _engineId = usmSecParams.EngineId.ToArray();
-
-            Assert.NotEmpty(_engineId);
-
-            Assert.Equal(_engineId, Convert.FromBase64String(EngineIdBase64));
-
-            Assert.Equal(12, message.SecurityParameters.AuthParams.Length);
-
-            var authParams = new byte[12];
-
-            message.SecurityParameters.AuthParams.CopyTo(authParams);
-
-            message.SecurityParameters.AuthParams.Span.Fill(0x0);
-
-            var writer = new AsnWriter(AsnEncodingRules.BER);
-            message.WriteTo(writer);
-            var encoded = writer.Encode();
-
-            var md5Auth = new AuthenticationService(
-                AuthenticationProtocol.Sha1,
-                GetAuthKey(_engineId, HashAlgorithmName.SHA1));
-
-            var authenticated = await md5Auth.AuthenticateIncomingMsg(encoded, authParams);
-
-            Assert.True(authenticated);
+            await TestIncomingAuthNoPriv(
+                 HashAlgorithmName.SHA256,
+                 AuthenticationProtocol.Sha256,
+                 dump);
         }
     }
 }
