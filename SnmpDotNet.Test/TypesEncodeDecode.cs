@@ -19,7 +19,7 @@ namespace SnmpDotNet.Test
                 AsnEncodingRules.BER);
         }
 
-        private string ToHexString(IAsnSerializable asns)
+        private static string ToHexString(IAsnSerializable asns)
         {
             var writer = new AsnWriter(AsnEncodingRules.BER);
             asns.WriteTo(writer);
@@ -66,6 +66,17 @@ namespace SnmpDotNet.Test
                 "Life, the Universe, and Everything",
                 Encoding.ASCII.GetString(octetString.Octets));
             Assert.Equal(hexBer, ToHexString(octetString));
+        }
+        
+        [Fact]
+        public void EncodeDecode_TimeTicks()
+        {
+            var hexBer = "430306034C"; // Timeticks: (394060) 1:05:40.60
+            var reader = GetReader(hexBer);
+            var timeTicks = TimeTicks.ReadFrom(reader);
+            Assert.Equal((uint) 394060, timeTicks.Value);
+            Assert.Equal(hexBer, ToHexString(timeTicks));
+            Assert.Equal("Timeticks: (394060) 00:01:05:40.60", timeTicks.ToString());
         }
     }
 }

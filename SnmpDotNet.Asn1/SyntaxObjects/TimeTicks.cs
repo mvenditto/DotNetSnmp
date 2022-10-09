@@ -19,11 +19,19 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
                 Value, tag: AsnTypes.TimeTicks);
         }
 
+        public static TimeTicks ReadFrom(AsnReader reader)
+        {
+            reader.TryReadUInt32(
+                out var ticks,
+                expectedTag: AsnTypes.TimeTicks);
+            return new(ticks);
+        }
+
         public override string ToString()
         {
             var ts = TimeSpan.FromSeconds(Value / 100f);
             var repr = ts.ToString(@"dd\:hh\:mm\:ss\.ff");
-            return "TimeTicks: " + repr;
+            return $"Timeticks: ({Value}) {repr}";
         }
 
         public static implicit operator uint(TimeTicks t) => t.Value;
