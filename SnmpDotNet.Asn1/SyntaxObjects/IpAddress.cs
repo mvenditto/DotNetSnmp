@@ -1,6 +1,5 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
 using System.Formats.Asn1;
-using System.Net;
 using System.Text;
 
 namespace SnmpDotNet.Asn1.SyntaxObjects
@@ -29,7 +28,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             AddressBytes = address;
         }
 
-        public IpAddress(IPAddress address)
+        public IpAddress(System.Net.IPAddress address)
         {
             AddressBytes = address.GetAddressBytes();
         }
@@ -41,9 +40,16 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
                 tag: AsnTypes.IpAddress);
         }
 
-        public void Deconstruct(out IPAddress address)
+        public static IpAddress ReadFrom(AsnReader reader)
         {
-            address = new IPAddress(AddressBytes);
+            var octets = reader.ReadOctetString(
+                expectedTag: AsnTypes.IpAddress);
+            return new(octets);
+        }
+
+        public void Deconstruct(out System.Net.IPAddress address)
+        {
+            address = new System.Net.IPAddress(AddressBytes);
         }
 
         public override string ToString()

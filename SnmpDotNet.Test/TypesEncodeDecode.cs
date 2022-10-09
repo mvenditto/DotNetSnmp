@@ -1,11 +1,7 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
 using SnmpDotNet.Asn1.SyntaxObjects;
-using System;
-using System.Collections.Generic;
 using System.Formats.Asn1;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SnmpDotNet.Test
@@ -44,6 +40,16 @@ namespace SnmpDotNet.Test
             var i32 = Integer32.ReadFrom(reader);
             Assert.Equal(42, i32.Value);
             Assert.Equal(hexBer, ToHexString(i32));
+        }
+
+        [Fact]
+        public void EncodeDecode_IpAddress()
+        {
+            var hexBer = "4004C0A8ED18";
+            var reader = GetReader(hexBer);
+            var ipAddress = IpAddress.ReadFrom(reader);
+            Assert.Equal(new byte[4] { 192, 168, 237, 24 }, ipAddress.AddressBytes);
+            Assert.Equal(hexBer, ToHexString(ipAddress));
         }
 
         [Fact]
