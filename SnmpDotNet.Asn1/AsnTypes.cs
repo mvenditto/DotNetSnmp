@@ -52,6 +52,8 @@ namespace SnmpDotNet.Asn1.Serialization
         private const byte _counter64 = 6;
         private const byte _float = 8;
         private const byte _double = 9;
+        private const byte _integer64 = 10;
+        private const byte _unsigned64 = 11;
 
         public const int AsnOpaqueCounter64TagValue // 48 + (64 | 6) = 118
             = AsnOpaqueTag2 + (Application | _counter64);
@@ -62,6 +64,12 @@ namespace SnmpDotNet.Asn1.Serialization
         public const int AsnOpaqueDoubleTagValue    // 48 + (64 | 6) = 121
             = AsnOpaqueTag2 + (Application | _double);
 
+        public const int AsnOpaqueInteger64TagValue
+            = AsnOpaqueTag2 + (Application | _integer64);
+
+        public const int AsnOpaqueUnsigned64TagValue
+            = AsnOpaqueTag2 + (Application | _unsigned64);
+
         public readonly static Asn1Tag OpaqueCounter64 = 
             new(TagClass.ContextSpecific, AsnOpaqueCounter64TagValue);
 
@@ -70,6 +78,12 @@ namespace SnmpDotNet.Asn1.Serialization
 
         public readonly static Asn1Tag OpaqueDouble = 
             new(TagClass.ContextSpecific, AsnOpaqueDoubleTagValue);
+
+        public readonly static Asn1Tag OpaqueInteger64 =
+            new(TagClass.ContextSpecific, AsnOpaqueInteger64TagValue);
+
+        public readonly static Asn1Tag OpaqueUnsigned64 =
+            new(TagClass.ContextSpecific, AsnOpaqueUnsigned64TagValue);
         #endregion
     }
 }
