@@ -55,5 +55,17 @@ namespace SnmpDotNet.Test
             Assert.Equal(9223372036854775807, opaqueInt64.Value);
             Assert.Equal(hexBer, ToHexString(opaqueInt64));
         }
+
+        [Fact]
+        public void EncodeDecode_OctetString_Ascii()
+        {
+            var hexBer = "04224C6966652C2074686520556E6976657273652C20616E642045766572797468696E67";
+            var reader = GetReader(hexBer);
+            var octetString = OctetString.ReadFrom(reader);
+            Assert.Equal(
+                "Life, the Universe, and Everything",
+                Encoding.ASCII.GetString(octetString.Octets));
+            Assert.Equal(hexBer, ToHexString(octetString));
+        }
     }
 }

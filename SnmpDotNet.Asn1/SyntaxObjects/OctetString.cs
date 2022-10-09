@@ -41,6 +41,12 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             writer.WriteOctetString(Octets);
         }
 
+        public static OctetString ReadFrom(AsnReader reader)
+        {
+            var octets = reader.ReadOctetString();
+            return new(octets);
+        }
+
         public static implicit operator string(OctetString o) => o.ToString();
     }
 }
