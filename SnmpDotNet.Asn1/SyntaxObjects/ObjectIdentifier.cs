@@ -17,6 +17,12 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             writer.WriteObjectIdentifier(Oid);
         }
 
+        public static ObjectIdentifier ReadFrom(AsnReader reader)
+        {
+            var oid = reader.ReadObjectIdentifier();
+            return new(oid);
+        }
+
         public override string ToString() => Oid.ToString();
 
         public static implicit operator string(ObjectIdentifier o) => o.Oid.ToString();

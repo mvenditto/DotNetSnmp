@@ -27,6 +27,16 @@ namespace SnmpDotNet.Test
         }
 
         [Fact]
+        public void EncodeDecode_ObjectIdentifier()
+        {
+            var hexBer = "060B2B0601040183A468010163";
+            var reader = GetReader(hexBer);
+            var oid = ObjectIdentifier.ReadFrom(reader);
+            Assert.Equal("1.3.6.1.4.1.53864.1.1.99", oid.Oid);
+            Assert.Equal(hexBer, ToHexString(oid));
+        }
+
+        [Fact]
         public void EncodeDecode_Integer32()
         {
             var hexBer = "02012A";
