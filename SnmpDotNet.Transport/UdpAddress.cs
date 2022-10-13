@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace SnmpDotNet.Transport
 {
-    public class UdpAddress : TransportIpAddress
+    public class UdpAddress : InetAddress
     {
         public override AddressFamily ProtocolFamilty => AddressFamily.InterNetwork;
 
