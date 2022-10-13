@@ -1,9 +1,10 @@
-﻿using System.Buffers;
+﻿using SnmpDotNet.V3.Utils;
+using System.Buffers;
 using System.Security.Cryptography;
 
 namespace SnmpDotNet.Protocol.V3.Security.Privacy
 {
-    public class DESPrivacyService : IPrivacyService
+    public class DESPrivacyService : IPrivacyService, IDisposable
     {
         public int PrivacyParametersLength => 8;
 
@@ -13,7 +14,7 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
 
         private Memory<byte> _privacyKey;
 
-        private readonly byte[] _engineBoots;
+        private Memory<byte> _engineBoots;
 
         private int _salt = -1;
 
@@ -26,19 +27,31 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
                 throw new ArgumentException("privKey for DES-CBC must be 16 bytes.");
             }
 
-            _engineBoots = BitConverter.GetBytes(engineBoots)
-                .Reverse() // big-endian
-                .ToArray();
-
             _des = DES.Create();
 
-            _bufferBackArray = ArrayPool<byte>.Shared.Rent(16);
+            _bufferBackArray = ArrayPool<byte>.Shared.Rent(20);
 
-            _privacyKey = (Memory<byte>)_bufferBackArray;
+            _privacyKey = (Memory<byte>)_bufferBackArray[..16];
+
+            _engineBoots = (Memory<byte>)_bufferBackArray[16..20];
+
+            UpdateEngineBoots(engineBoots);
 
             privacyKey.CopyTo(_privacyKey);
 
             _des.Key = _privacyKey[..8].ToArray();
+        }
+
+        public void UpdateEngineBoots(int authoritativeEngineBoots)
+        {
+            BinaryHelpers.CopyBytesMostSignificantFirst(
+                authoritativeEngineBoots, 
+                _engineBoots.Span);
+        }
+
+        public void UpdateEngineTime(int authoritativeEngineBoots)
+        {
+            // no-op
         }
 
         private int GetNextSalt()
@@ -60,14 +73,13 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
             Span<byte> encryptedScopedPdu)
         {
             // generate an 8-octet salt value
-            var saltValue = BitConverter.GetBytes(42); //GetNextSalt()
+            var saltValue = GetNextSalt();
 
-            _engineBoots[..4].CopyTo(privParameters);
+            _engineBoots.Span.CopyTo(privParameters);
 
-            privParameters[7] = saltValue[0];
-            privParameters[6] = saltValue[1];
-            privParameters[5] = saltValue[2];
-            privParameters[4] = saltValue[3];
+            BinaryHelpers.CopyBytesMostSignificantFirst(
+                saltValue, 
+                privParameters);
 
             var salt = privParameters;
 
@@ -87,6 +99,30 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
                 scopedPdu.Span,
                 iv,
                 encryptedScopedPdu,
+                PaddingMode.Zeros);
+        }
+
+        public Memory<byte> DecryptScopedPdu(
+            ReadOnlyMemory<byte> encryptedPdu,
+            ReadOnlyMemory<byte> privParameters)
+        {
+            // preIV = last 8 octets of privacyKey
+            Span<byte> preIv = _privacyKey[8..16].Span;
+
+            ReadOnlySpan<byte> salt = privParameters.Span;
+
+            // final IV
+            Span<byte> iv = stackalloc byte[8];
+
+            // XOR pre-iv with salt
+            for (int i = 0; i < 8; i++)
+            {
+                iv[i] = (byte)(salt[i] ^ preIv[i]);
+            }
+
+            return _des.DecryptCbc(
+                encryptedPdu.Span, 
+                iv, 
                 PaddingMode.Zeros);
         }
 
