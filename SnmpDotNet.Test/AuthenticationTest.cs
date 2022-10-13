@@ -6,8 +6,8 @@ using SnmpDotNet.Test.Helpers.XUnit.Project.Attributes;
 using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
 using System.Security.Cryptography;
-using System.Text;
 using Xunit;
+using static SnmpDotNet.Test.TestUtils;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
 
@@ -17,29 +17,7 @@ namespace SnmpDotNet.Test
     [TestCaseOrderer("XUnit.Project.Orderers.PriorityOrderer", "XUnit.Project")]
     public class AuthenticationTest
     {
-        private const string TestPassword = "Password1";
-
-        private const string EngineIdBase64 = "gAAfiAQ4MDAwMDAwMjAxMDk4NDAzMDE=";
-
         private byte[] _engineId;
-
-        private static byte[] GetAuthKey(byte[] engineId, HashAlgorithmName? hashAlgorithm = null)
-        {
-            var hash_ = hashAlgorithm ?? HashAlgorithmName.MD5;
-
-            using var hash = IncrementalHash.CreateHash(hash_);
-
-            var authKey = new byte[hash.HashLengthInBytes];
-
-            KeyUtils.GenerateLocalizedKey(
-                TestPassword.GetBytesMemoryOrDefault(Encoding.UTF8),
-                engineId,
-                hash,
-                authKey
-            );
-
-            return authKey; ;
-        }
 
         [Fact, TestPriority(0)]
         public void EncodeDecodeDiscoveryMessage()
