@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace SnmpDotNet.Transport
 {
-    public abstract class InetAddress: IAddress
+    public abstract class InetTransportAddress: ITransportAddress
     {
         public IPEndPoint Endpoint;
 

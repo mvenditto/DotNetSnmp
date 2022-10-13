@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace SnmpDotNet.Transport
 {
-    public class UdpAddress : InetAddress
+    public class UdpTransportAddress : InetTransportAddress
     {
         public override AddressFamily ProtocolFamilty => AddressFamily.InterNetwork;
 
@@ -23,22 +23,22 @@ namespace SnmpDotNet.Transport
                 return Endpoint!.Serialize();
             }
         }
-        public UdpAddress()
+        public UdpTransportAddress()
         {
             
         }
 
-        public UdpAddress(int port)
+        public UdpTransportAddress(int port)
         {
             Endpoint = new(IPAddress.Loopback, port);
         }
 
-        public UdpAddress(IPEndPoint endpoint)
+        public UdpTransportAddress(IPEndPoint endpoint)
         {
             Endpoint = endpoint;
         }
 
-        public UdpAddress(string address, int port)
+        public UdpTransportAddress(string address, int port)
         {
             Endpoint = new IPEndPoint(
                 IPAddress.Parse(address), 

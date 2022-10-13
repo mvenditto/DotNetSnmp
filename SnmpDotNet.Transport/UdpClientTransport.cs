@@ -3,13 +3,11 @@ using System.Net.Sockets;
 
 namespace SnmpDotNet.Transport
 {
-    public class UdpClientTransport : ITransport<UdpAddress>
+    public class UdpClientTransport : ITransport<UdpTransportAddress>
     {
-        public UdpAddress Address { get; init; }
+        public UdpTransportAddress Address { get; init; }
 
         public int MaxIncomingMessageSize { get; set; }
-
-        public TransportMode TransportMode => TransportMode.Any;
 
         public int Timeout { get; set; } = 5000;
 
@@ -17,7 +15,7 @@ namespace SnmpDotNet.Transport
 
         private readonly UdpClient _udpClient;
 
-        public UdpClientTransport(UdpAddress address)
+        public UdpClientTransport(UdpTransportAddress address)
         {
             Address = address;
             _udpClient = new UdpClient(Address.Endpoint);
@@ -26,12 +24,12 @@ namespace SnmpDotNet.Transport
         public UdpClientTransport()
         {
             var endpoint = new IPEndPoint(IPAddress.Any, 0);
-            Address = new UdpAddress(endpoint);
+            Address = new UdpTransportAddress(endpoint);
             _udpClient = new UdpClient(endpoint);
         }
 
         public ValueTask<int> SendMessageAsync(
-            UdpAddress address, 
+            UdpTransportAddress address, 
             ReadOnlyMemory<byte> message,
             CancellationToken cancellationToken = default)
         {
@@ -42,7 +40,7 @@ namespace SnmpDotNet.Transport
         }
 
         public int SendMessage(
-            UdpAddress address, 
+            UdpTransportAddress address, 
             ReadOnlySpan<byte> message)
         {
             return _udpClient.Send(message, address.Endpoint);

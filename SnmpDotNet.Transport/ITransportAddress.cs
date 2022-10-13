@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace SnmpDotNet.Transport
 {
-    public interface IAddress
+    public interface ITransportAddress
     {
         AddressFamily ProtocolFamilty { get; }
 

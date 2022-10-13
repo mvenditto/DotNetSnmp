@@ -1,12 +1,10 @@
 ﻿namespace SnmpDotNet.Transport
 {
-    public interface ITransport<A> where A: IAddress
+    public interface ITransport<A> where A: ITransportAddress
     {
         A Address { get; }
 
         int MaxIncomingMessageSize { get; set; }
-
-        TransportMode TransportMode { get;  }
 
         int Timeout { get; set; }
 
