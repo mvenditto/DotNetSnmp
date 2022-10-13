@@ -11,5 +11,9 @@
         int Timeout { get; set; }
 
         int MaxRetries { get; set; }
+
+        Task SendMessageAsync(ReadOnlyMemory<byte> message, CancellationToken cancellationToken);
+
+        void SendMessage(ReadOnlySpan<byte> message);
     }
 }
