@@ -9,6 +9,7 @@
         ValueTask AuthenticateOutgoingMsg(
             in ReadOnlySpan<byte> wholeMsg, 
             Span<byte> authParameters);
+
         ValueTask<bool> AuthenticateIncomingMsg(
             in ReadOnlySpan<byte> wholeMsg,
             in ReadOnlySpan<byte> authParams);
