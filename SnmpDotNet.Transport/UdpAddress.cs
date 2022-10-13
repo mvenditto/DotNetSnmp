@@ -9,18 +9,18 @@ namespace SnmpDotNet.Transport
 
         public override SocketType SocketType => SocketType.Dgram;
 
-        public int Port => _endpoint?.Port ?? 0;
+        public int Port => Endpoint?.Port ?? 0;
 
         public override SocketAddress SocketAddress
         {
             get 
             {
-                if (_endpoint == null)
+                if (Endpoint == null)
                 {
                     throw new InvalidOperationException();
                 }
 
-                return _endpoint!.Serialize();
+                return Endpoint!.Serialize();
             }
         }
         public UdpAddress()
@@ -30,17 +30,17 @@ namespace SnmpDotNet.Transport
 
         public UdpAddress(int port)
         {
-            _endpoint = new(IPAddress.Loopback, port);
+            Endpoint = new(IPAddress.Loopback, port);
         }
 
         public UdpAddress(IPEndPoint endpoint)
         {
-            _endpoint = endpoint;
+            Endpoint = endpoint;
         }
 
         public UdpAddress(string address, int port)
         {
-            _endpoint = new IPEndPoint(
+            Endpoint = new IPEndPoint(
                 IPAddress.Parse(address), 
                 port);
         }

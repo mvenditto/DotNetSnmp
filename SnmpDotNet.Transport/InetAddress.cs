@@ -5,7 +5,7 @@ namespace SnmpDotNet.Transport
 {
     public abstract class InetAddress: IAddress
     {
-        protected IPEndPoint? _endpoint;
+        public IPEndPoint Endpoint;
 
         public abstract AddressFamily ProtocolFamilty { get; }
 
@@ -15,14 +15,14 @@ namespace SnmpDotNet.Transport
 
         public byte[] GetAddressBytes()
         {
-            if (_endpoint == null)
+            if (Endpoint == null)
             {
                 throw new InvalidOperationException();
             }
 
-            return _endpoint!.Address.GetAddressBytes();
+            return Endpoint!.Address.GetAddressBytes();
         }
 
-        public bool IsValid() => _endpoint != null;
+        public bool IsValid() => Endpoint != null;
     }
 }

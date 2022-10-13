@@ -2,9 +2,9 @@
 {
     public interface ITransport<A> where A: IAddress
     {
-        A Address { get; set; }
+        A Address { get; }
 
-        int MaxIncomingMessageSize { get; }
+        int MaxIncomingMessageSize { get; set; }
 
         TransportMode TransportMode { get;  }
 
@@ -12,8 +12,13 @@
 
         int MaxRetries { get; set; }
 
-        Task SendMessageAsync(ReadOnlyMemory<byte> message, CancellationToken cancellationToken);
+        ValueTask<int> SendMessageAsync(
+            A address,
+            ReadOnlyMemory<byte> message,
+            CancellationToken cancellationToken = default);
 
-        void SendMessage(ReadOnlySpan<byte> message);
+        int SendMessage(
+            A address,
+            ReadOnlySpan<byte> message);
     }
 }
