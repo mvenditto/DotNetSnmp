@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SnmpDotNet.Transport\SnmpDotNet.Transport.csproj" />
     <ProjectReference Include="..\SnmpDotNet.V1\SnmpDotNet.V1.csproj" />
     <ProjectReference Include="..\SnmpDotNet.V2c\SnmpDotNet.V2c.csproj" />
     <ProjectReference Include="..\SnmpDotNet.V3\SnmpDotNet.V3.csproj" />
