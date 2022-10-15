@@ -170,6 +170,10 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
                 {
                     throw new NotImplementedException();
                 }
+                else if (tag == AsnTypes.Counter64)
+                {
+                    bindings.Add(new(oid, Counter64.ReadFrom(vbSeq)));
+                }
                 else
                 {
                     Debug.WriteLine($"Unknown Tag {tag}");
