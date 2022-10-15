@@ -11,9 +11,11 @@ namespace SnmpDotNet.Protocol.V3
 
         public HeaderData GlobalData { get; set; }
 
-        public UsmSecurityParameters SecurityParameters {get; set;}
+        public UsmSecurityParameters SecurityParameters { get; set; }
 
         public ScopedPdu ScopedPdu { get; set; }
+
+        public ReadOnlyMemory<byte> EncryptedScopedPdu { get; private set;  }
 
         public override void WriteTo(AsnWriter writer)
         {
@@ -54,14 +56,22 @@ namespace SnmpDotNet.Protocol.V3
 
             var usmSecurityParams = UsmSecurityParameters.ReadFrom(rootSeq);
 
-            var scopedPdu = ScopedPdu.ReadFrom(rootSeq);
-
-            return new()
+            var msg = new SnmpV3Message
             {
                 GlobalData = globalData,
-                SecurityParameters = usmSecurityParams,
-                ScopedPdu = scopedPdu
+                SecurityParameters = usmSecurityParams
             };
+
+            if (globalData.MsgFlags.HasFlag(MsgFlags.Priv))
+            {
+                msg.EncryptedScopedPdu = rootSeq.ReadOctetString();
+            }
+            else
+            {
+                msg.ScopedPdu = ScopedPdu.ReadFrom(rootSeq);
+            }
+
+            return msg;
         }
     }
 }
