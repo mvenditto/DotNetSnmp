@@ -3,7 +3,13 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+	<LangVersion>preview</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SnmpDotNet.Asn1\SnmpDotNet.Asn1.csproj" />
+    <ProjectReference Include="..\SnmpDotNet.Common\SnmpDotNet.Common.csproj" />
+  </ItemGroup>
 
 </Project>

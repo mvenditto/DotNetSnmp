@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Test", "SnmpDotNet.Test\SnmpDotNet.Test.csproj", "{F7965D34-6B56-40E3-BBEA-843893465AA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnmpDotNet.Transport", "SnmpDotNet.Transport\SnmpDotNet.Transport.csproj", "{6E9888BD-E607-48B0-825D-98F5C33BF893}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{F7965D34-6B56-40E3-BBEA-843893465AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7965D34-6B56-40E3-BBEA-843893465AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7965D34-6B56-40E3-BBEA-843893465AA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E9888BD-E607-48B0-825D-98F5C33BF893}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E9888BD-E607-48B0-825D-98F5C33BF893}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E9888BD-E607-48B0-825D-98F5C33BF893}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E9888BD-E607-48B0-825D-98F5C33BF893}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
