@@ -58,10 +58,16 @@ namespace SnmpDotNet.Test
         public void EncodeDecode_Counter64()
         {
             var hexBer = "460900FFFFFFFFFFFFFFFE";
-            var reader = GetReader(hexBer); // 18446744073709551614
+            var reader = GetReader(hexBer);
             var counter64 = Counter64.ReadFrom(reader);
             Assert.Equal(18446744073709551614, counter64.Value);
             Assert.Equal(hexBer, ToHexString(counter64));
+
+            hexBer = "460100";
+            reader = GetReader(hexBer);
+            var zeroCounter = Counter64.ReadFrom(reader);
+            Assert.Equal((ulong) 0, zeroCounter.Value);
+            Assert.Equal(hexBer, ToHexString(zeroCounter));
         }
 
         [Fact]
