@@ -1,4 +1,5 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
+using SnmpDotNet.Common.Definitions;
 using SnmpDotNet.Protocol.V3.Security;
 using System.ComponentModel.DataAnnotations;
 using System.Formats.Asn1;

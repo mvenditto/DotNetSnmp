@@ -42,8 +42,6 @@ namespace SnmpDotNet.Protocol.V3
             var pduType = seq.PeekTag();
 
             Pdu pdu = null;
-
-
             if (pduType == SnmpAsnTags.GetResponseMsg)
             {
                 pdu = GetResponsePdu.ReadFrom(seq);

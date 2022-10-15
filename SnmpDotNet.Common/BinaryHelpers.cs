@@ -1,8 +1,8 @@
 ﻿using System.Buffers.Binary;
 
-namespace SnmpDotNet.V3.Utils
+namespace SnmpDotNet.Common.Helpers
 {
-    internal static class BinaryHelpers
+    public static class BinaryHelpers
     {
         public static byte[] GetBytesMostSignificantFirst(int i)
         {
@@ -20,6 +20,20 @@ namespace SnmpDotNet.V3.Utils
                 : i;
 
             return BitConverter.GetBytes(value);
+        }
+
+        public static void CopyBytesMostSignificantFirst(short i, Span<byte> destination)
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                destination[0] = (byte)(i >> 24);
+                destination[1] = (byte)(i >> 16);
+            }
+            else
+            {
+                destination[0] = (byte)i;
+                destination[1] = (byte)(i >> 8);
+            }
         }
 
         public static void CopyBytesMostSignificantFirst(int i, Span<byte> destination)
