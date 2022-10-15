@@ -10,8 +10,17 @@ namespace SnmpDotNet.Protocol.V3.Security
     {
         public Memory<byte> EngineId { get; set; }
 
+        /// <summary>
+        /// count of the number of times the
+        /// SNMP engine has re-booted/re-initialized since snmpEngineID
+        /// was last configured
+        /// </summary>
         public int EngineBoots { get; set; }
 
+        /// <summary>
+        /// the number of seconds since the
+        /// snmpEngineBoots counter was last incremented
+        /// </summary>
         public int EngineTime { get; set; }
 
         public string SecurityName { get; set; }
