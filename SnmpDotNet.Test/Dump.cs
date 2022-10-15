@@ -17,7 +17,7 @@ namespace SnmpDotNet.Test
 
         public static byte[] BytesFromHexString(string textualDump)
         {
-            var lines = Regex.Split(textualDump, @"\r*\n")
+            var lines = Regex.Split(textualDump.TrimStart(), @"\r*\n")
                 .Select(x => x.Trim())
                 .ToList();
 
@@ -25,7 +25,10 @@ namespace SnmpDotNet.Test
 
             var hexData = lines
                 .Skip(1)
-                .SelectMany(l => l.Split().Skip(1).SkipLast(1).Where(x => !string.IsNullOrEmpty(x)))
+                .Select(x => x.Split(':')[1])
+                .Select(x => x.Split("    ")[0])
+                .SelectMany(l => l.Split())
+                .Where(x => !string.IsNullOrEmpty(x))
                 .Select(b => Convert.ToByte(b, 16))
                 .ToArray();
 
