@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
-namespace SnmpDotNet.Test
+namespace SnmpDotNet.Utils
 {
     [ExcludeFromCodeCoverage]
-    internal static class Dump
+    public static class Dump
     {
         /*
             Sending 43 bytes to UDP: [127.0.0.1]:161->[0.0.0.0]:0
