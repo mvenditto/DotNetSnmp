@@ -18,6 +18,12 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
 
         private Memory<byte> _engineBoots;
 
+        private int _lastKnownEngineBoots;
+
+        public int EngineBoots => _lastKnownEngineBoots;
+
+        public int EngineTime => -1;
+
         private int _salt = -1;
 
         public DESPrivacyService(
@@ -39,6 +45,8 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
 
             _engineBoots = (Memory<byte>)_bufferBackArray[16..20];
 
+            _lastKnownEngineBoots = engineBoots;
+
             UpdateEngineBoots(engineBoots);
 
             privacyKey.CopyTo(_privacyKey);
@@ -48,6 +56,8 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
 
         public void UpdateEngineBoots(int authoritativeEngineBoots)
         {
+            _lastKnownEngineBoots = authoritativeEngineBoots;
+
             BinaryHelpers.CopyBytesMostSignificantFirst(
                 authoritativeEngineBoots, 
                 _engineBoots.Span);
@@ -55,7 +65,7 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
 
         public void UpdateEngineTime(int authoritativeEngineBoots)
         {
-            // no-op
+            throw new NotSupportedException();
         }
 
         private int GetNextSalt()

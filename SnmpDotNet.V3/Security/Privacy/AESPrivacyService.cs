@@ -20,6 +20,14 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
 
         private readonly Memory<byte> _engineTime;
 
+        private int _lastKnownEngineTime;
+
+        private int _lastKnownEngineBoots;
+
+        public int EngineTime => _lastKnownEngineTime;
+
+        public int EngineBoots => _lastKnownEngineBoots;
+
         private long _salt = -1;
 
         public AESPrivacyService(
@@ -38,6 +46,9 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
             _aes.KeySize = privacyKey.Length * 8;
             _aes.Padding = PaddingMode.Zeros;
             _aes.Mode = CipherMode.CFB;
+
+            _lastKnownEngineBoots = engineBoots;
+            _lastKnownEngineTime = engineTime;
 
             _paddingBuffer = ArrayPool<byte>.Shared.Rent(65507);
 
@@ -62,6 +73,8 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
 
         public void UpdateEngineBoots(int authoritativeEngineBoots)
         {
+            _lastKnownEngineBoots = authoritativeEngineBoots;
+
             BinaryHelpers.CopyBytesMostSignificantFirst(
                 authoritativeEngineBoots,
                 _engineBoots.Span);
@@ -69,6 +82,8 @@ namespace SnmpDotNet.Protocol.V3.Security.Privacy
 
         public void UpdateEngineTime(int authoritativeEngineTime)
         {
+            _lastKnownEngineTime = authoritativeEngineTime;
+
             BinaryHelpers.CopyBytesMostSignificantFirst(
                 authoritativeEngineTime,
                 _engineTime.Span);

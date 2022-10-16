@@ -3,6 +3,8 @@
     public interface IPrivacyService
     {
         public int PrivacyParametersLength { get; }
+        int EngineTime { get; }
+        int EngineBoots { get; }
 
         Memory<byte> DecryptScopedPdu(ReadOnlyMemory<byte> encryptedPdu, ReadOnlyMemory<byte> privParameters);
 
