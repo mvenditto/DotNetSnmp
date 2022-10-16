@@ -17,6 +17,11 @@ var dump = @"Received 167 byte packet from UDP: [127.0.0.1]:161->[0.0.0.0]:35616
 
 Console.CursorVisible = false;
 
+var baseCursorTop = Console.CursorTop;
+
+// .CursorTop = 0;
+Console.CursorLeft = 0;
+
 var bytes = Dump.BytesFromHexString(dump);
 
 var members = BERUtils.Dump(bytes);
@@ -89,9 +94,9 @@ Console.WriteLine();
 var bgGray = $"{black}\u001b[47;1m";
 Console.WriteLine($"{bgGray}^X{reset} Copy Highlighted Bytes");
 
-Console.SetCursorPosition(0, 0);
+Console.SetCursorPosition(0, baseCursorTop);
 Console.WriteLine(arrow);
-Console.SetCursorPosition(0, 0);
+Console.SetCursorPosition(0, baseCursorTop);
 
 while (true)
 {
@@ -102,15 +107,20 @@ while (true)
         switch (key.Key)
         {
             case ConsoleKey.UpArrow:
-                if (Console.CursorTop > 0)
+                if (Console.CursorTop > 1)
                 {
-                    currMember = members[Console.CursorTop];
+                    if (Console.CursorTop - 1 - baseCursorTop >= members.Count)
+                    {
+                        continue;
+                    }
+
+                    currMember = members[Console.CursorTop - baseCursorTop];
 
                     Console.Write("\r    " + currMember);
 
                     Console.SetCursorPosition(0, Console.CursorTop - 1);
 
-                    currMember = members[Console.CursorTop] with
+                    currMember = members[Console.CursorTop - baseCursorTop] with
                     {
                         TagColor = cyan
                     };
@@ -123,20 +133,24 @@ while (true)
                 }
                 break;
             case ConsoleKey.DownArrow:
-                if (Console.CursorTop < members.Count - 1)
+                if (Console.CursorTop < Console.BufferHeight)
                 {
-                    currMember = members[Console.CursorTop];
+                    if (Console.CursorTop + 1 - baseCursorTop >= members.Count)
+                    {
+                        continue;
+                    }
+
+                    currMember = members[Console.CursorTop - baseCursorTop];
 
                     Console.Write("\r    " + currMember);
 
                     Console.SetCursorPosition(0, Console.CursorTop + 1);
 
-                    currMember = members[Console.CursorTop] with
+                    currMember = members[Console.CursorTop - baseCursorTop] with
                     {
                         TagColor = cyan
                     };
                     Console.Write($"{arrow} {currMember}");
-
                     var oldTop = Console.CursorTop;
                     Console.SetCursorPosition(0, hexDumpTop);
                     PrintHexDump();
