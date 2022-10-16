@@ -1,9 +1,8 @@
 ﻿using SnmpDotNet.Asn1.SyntaxObjects;
 using SnmpDotNet.Protocol.V1;
-using SnmpDotNet.Protocol.V2;
 using SnmpDotNet.Protocol.V3;
 using SnmpDotNet.Protocol.V3.Security.Privacy;
-using System.Diagnostics;
+using SnmpDotNet.Utils;
 using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
 using System.Security.Cryptography;

@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SnmpDotNet.Utils\SnmpDotNet.Utils.csproj" />
     <ProjectReference Include="..\SnmpDotNet.V3\SnmpDotNet.V3.csproj" />
   </ItemGroup>
 

@@ -3,6 +3,7 @@ using SnmpDotNet.Protocol.V3;
 using SnmpDotNet.Protocol.V3.Security;
 using SnmpDotNet.Protocol.V3.Security.Authentication;
 using SnmpDotNet.Test.Helpers.XUnit.Project.Attributes;
+using SnmpDotNet.Utils;
 using System.Diagnostics.CodeAnalysis;
 using System.Formats.Asn1;
 using System.Security.Cryptography;
