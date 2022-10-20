@@ -38,6 +38,11 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             value = Value;
         }
 
+        public override string ToString()
+        {
+            return $"{Name} = {Value}";
+        }
+
         public static explicit operator VarBind(string oid) => new(oid);
     }
 }
