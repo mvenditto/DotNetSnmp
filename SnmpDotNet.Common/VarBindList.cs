@@ -13,6 +13,8 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         // rfc 3416 (4.2)
         private const int MaxVariableBindings = 2147483647;
 
+        public bool IsEmpty => _variableBindings?.Count == 0;
+
         public VarBindList()
         {
             _variableBindings = new List<VarBind>();
@@ -28,6 +30,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             _variableBindings = oids.Select(
                 oid => new VarBind(oid)).ToList();
         }
+
         public VarBindList(params ObjectIdentifier[] oids)
         {
             _variableBindings = oids.Select(

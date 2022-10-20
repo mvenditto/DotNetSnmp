@@ -14,7 +14,9 @@ namespace SnmpDotNet.Common.Definitions
 
         public int ErrorIndex { get; set; } = 0;
 
-        public VarBindList? VariableBindings { get; set; }
+        public VarBindList VariableBindings { get; set; }
+
+        public bool HasData => VariableBindings?.IsEmpty == false;
 
         public abstract void WriteTo(AsnWriter writer);
 
