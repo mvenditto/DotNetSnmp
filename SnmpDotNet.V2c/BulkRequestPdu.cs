@@ -1,13 +1,12 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
 using SnmpDotNet.Asn1.SyntaxObjects;
+using SnmpDotNet.Common.Definitions;
 using System.Formats.Asn1;
 
 namespace SnmpDotNet.Protocol.V2
 {
-    public class BulkRequestPdu: IAsnSerializable
+    public class BulkRequestPdu: Pdu
     {
-        public int RequestId { get; set; } = 0;
-
         /// <summary>
         /// how many OIDs in the request should be treated as GET request variables
         /// </summary>
@@ -18,9 +17,9 @@ namespace SnmpDotNet.Protocol.V2
         /// </summary>
         public int MaxRepetitions { get; set; } = 0;
 
-        public VarBindList? VariableBindings { get; set; }
+        public override Asn1Tag PduType => SnmpAsnTags.BulkMsg;
 
-        public void WriteTo(AsnWriter writer)
+        public override void WriteTo(AsnWriter writer)
         {
             using (_ = writer.PushSequence(tag: SnmpAsnTags.BulkMsg))
             {
