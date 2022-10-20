@@ -2,17 +2,16 @@
 
 namespace SnmpDotNet.Transport
 {
-    public interface ISnmpTransport
+    public interface ISnmpTransport: IDisposable
     {
-        ValueTask Listen();
-
-        ValueTask<int> SendMessageAsync(
-            IPEndPoint targetEndpoint,
-            ReadOnlyMemory<byte> message,
+        ValueTask<int> SendAsync(
+            ReadOnlyMemory<byte> message, 
+            IPEndPoint targetEndPoint,
             CancellationToken cancellationToken = default);
 
-        int SendMessage(
-            IPEndPoint targetEndpoint,
-            ReadOnlySpan<byte> message);
+        ValueTask<ReadOnlyMemory<byte>> 
+            ReceiveAsync(
+            IPEndPoint targetEndPoint,
+            CancellationToken cancellationToken);
     }
 }

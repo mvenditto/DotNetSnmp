@@ -11,39 +11,51 @@ namespace SnmpDotNet.Transport
 
         public IPEndPoint ListenEndpoint {get; init; }
 
-        public BasicUdpTransport(IPEndPoint listenEndpoint)
+        private const int MaxUdpSize = 65536;
+
+        public IPEndPoint TargetEndPoint { get; private set; }
+
+        public BasicUdpTransport(
+            IPEndPoint localEndPoint,
+            IPEndPoint targetEndPoint
+            )
         {
-            ListenEndpoint = listenEndpoint;
-            _udpClient = new UdpClient(listenEndpoint);
+            ListenEndpoint = localEndPoint;
+            TargetEndPoint = targetEndPoint;
+            _udpClient = new UdpClient(localEndPoint);
         }
 
-        public BasicUdpTransport(): this(new IPEndPoint(IPAddress.Any, 0))
+        public BasicUdpTransport(IPEndPoint targetEndPoint) 
+            : this(new IPEndPoint(IPAddress.Any, 0), targetEndPoint)
         {
 
         }
 
-        public ValueTask Listen()
-        {
-            _udpClient.Connect(ListenEndpoint);
-            return ValueTask.CompletedTask;
-        }
-
-        public ValueTask<int> SendMessageAsync(
-            IPEndPoint targetEndpoint,
+        public ValueTask<int> SendAsync(
             ReadOnlyMemory<byte> message,
+            IPEndPoint targetEndPoint,
             CancellationToken cancellationToken = default)
         {
             return _udpClient.SendAsync(
                 message,
-                cancellationToken: cancellationToken,
-                endPoint: targetEndpoint);
+                endPoint: targetEndPoint,
+                cancellationToken: cancellationToken);
         }
 
-        public int SendMessage(
-            IPEndPoint targetEndpoint,
-            ReadOnlySpan<byte> message)
+        public async ValueTask<ReadOnlyMemory<byte>> ReceiveAsync(
+            IPEndPoint targetEndPoint,
+            CancellationToken cancellationToken=default)
         {
-            return _udpClient.Send(message, targetEndpoint);
+            byte[] buffer = GC.AllocateArray<byte>(MaxUdpSize, pinned: true);
+
+            var received = await _udpClient.Client.ReceiveFromAsync(
+                buffer, 
+                SocketFlags.None, 
+                targetEndPoint);
+
+            var receivedBytes = received.ReceivedBytes;
+
+            return buffer.AsMemory(0, receivedBytes);
         }
 
         public void Close()
