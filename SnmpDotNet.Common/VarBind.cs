@@ -12,7 +12,7 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
         public VarBind(string oid, IAsnSerializable? value = null)
         {
             Name = new ObjectIdentifier(oid);
-            Value = value;
+            Value = value ?? Null.Instance;
         }
 
         public void WriteTo(AsnWriter writer)
