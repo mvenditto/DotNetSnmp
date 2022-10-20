@@ -4,7 +4,7 @@ using System.Formats.Asn1;
 
 namespace SnmpDotNet.Protocol.V2
 {
-    internal class BulkRequestPdu: IAsnSerializable
+    public class BulkRequestPdu: IAsnSerializable
     {
         public int RequestId { get; set; } = 0;
 
