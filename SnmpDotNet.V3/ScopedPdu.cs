@@ -6,6 +6,10 @@ using System.Text;
 
 namespace SnmpDotNet.Protocol.V3
 {
+    /// <summary>
+    /// A scopedPDU is a block of data containing a ContextEngineId, a
+    /// ContextName, and a Pdu.
+    /// </summary>
     public class ScopedPdu : IAsnSerializable
     {
         public Memory<byte> ContextEngineId { get; set; }

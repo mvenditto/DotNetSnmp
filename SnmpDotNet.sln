@@ -34,9 +34,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Utils", "SnmpDot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples.V1.LowLevelGet", "SnmpDotNet.Samples\SnmpDotNet.Samples.V1.LowLevelGet\SnmpDotNet.Samples.V1.LowLevelGet.csproj", "{329157B0-DBC8-4183-A761-2A1E3E4083BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnmpDotNet.Samples.V2.LowLevelBulk", "SnmpDotNet.Samples\SnmpDotNet.Samples.V2.LowLevelBulk\SnmpDotNet.Samples.V2.LowLevelBulk.csproj", "{E3E5CB3C-65EB-467A-8BC6-540274CA0B15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples.V2.LowLevelBulk", "SnmpDotNet.Samples\SnmpDotNet.Samples.V2.LowLevelBulk\SnmpDotNet.Samples.V2.LowLevelBulk.csproj", "{E3E5CB3C-65EB-467A-8BC6-540274CA0B15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnmpDotNet.Samples.V1.LowLevelTableTraversal", "SnmpDotNet.Samples\SnmpDotNet.Samples.V1.LowLevelTableTraversal\SnmpDotNet.Samples.V1.LowLevelTableTraversal.csproj", "{3EF77A5C-FDFD-4980-A104-9B6ED8C745D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples.V1.LowLevelTableTraversal", "SnmpDotNet.Samples\SnmpDotNet.Samples.V1.LowLevelTableTraversal\SnmpDotNet.Samples.V1.LowLevelTableTraversal.csproj", "{3EF77A5C-FDFD-4980-A104-9B6ED8C745D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnmpDotNet.Samples.V1.Dispatcher", "SnmpDotNet.Samples\SnmpDotNet.Samples.V1.Dispatcher\SnmpDotNet.Samples.V1.Dispatcher.csproj", "{86114FDE-0613-485A-90DB-5A4D2D5D9F59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +98,10 @@ Global
 		{3EF77A5C-FDFD-4980-A104-9B6ED8C745D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EF77A5C-FDFD-4980-A104-9B6ED8C745D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EF77A5C-FDFD-4980-A104-9B6ED8C745D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86114FDE-0613-485A-90DB-5A4D2D5D9F59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86114FDE-0613-485A-90DB-5A4D2D5D9F59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86114FDE-0613-485A-90DB-5A4D2D5D9F59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86114FDE-0613-485A-90DB-5A4D2D5D9F59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +111,7 @@ Global
 		{329157B0-DBC8-4183-A761-2A1E3E4083BE} = {CBF6539C-9227-408C-848E-B0EBACFC6AF6}
 		{E3E5CB3C-65EB-467A-8BC6-540274CA0B15} = {CBF6539C-9227-408C-848E-B0EBACFC6AF6}
 		{3EF77A5C-FDFD-4980-A104-9B6ED8C745D1} = {CBF6539C-9227-408C-848E-B0EBACFC6AF6}
+		{86114FDE-0613-485A-90DB-5A4D2D5D9F59} = {CBF6539C-9227-408C-848E-B0EBACFC6AF6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {13443A5A-5655-47F5-8A29-8930BCE5AF64}
