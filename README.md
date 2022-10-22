@@ -14,32 +14,37 @@ SnmpDotNet is a NET 6 SNMP client built ontop of `System.Formats.Asn1` BER seria
 ### A Sneak peek of the most basic "low-level" api usage
 ```csharp
 using SnmpDotNet.Client;
+using SnmpDotNet.Common.Definitions;
 using SnmpDotNet.Protocol.V1;
-using static System.Net.IPAddress;
+using SnmpDotNet.Transport;
+using SnmpDotNet.Transport.Targets;
+using System.Net;
 
-var get = new SnmpV1Message
-{
-    Community = "public",
-    Pdu = new GetRequestPdu
+var targetAddress = new IPEndPoint(
+    IPAddress.Parse("127.0.0.1"), 161);
+
+var dispatcher = new SnmpDispatcher();
+
+var response = await dispatcher.SendPdu(
+    new BasicUdpTransport(targetAddress),
+    new CommunityTarget("public"), // dafaults to v1
+    targetAddress,
+    new GetRequestPdu()
     {
         VariableBindings = new(
             "1.3.6.1.2.1.1.1.0", // sysDescr
             "1.3.6.1.2.1.1.3.0"  // sysUptime
         )
     }
-};
+) as GetResponsePdu;
 
-using var client = new SnmpUdpClient(new (Loopback, 161));
-
-var res = await client.GetAsync(get);
-
-foreach (var(name, value) in res.VariableBindings)
+foreach(var varBind in response.VariableBindings)
 {
-    Console.WriteLine($"{name}: {value}");
+    Console.WriteLine(varBind);
 }
 ```
 Output:
 ```bash
-1.3.6.1.2.1.1.1.0: String: SnmpDotNet will be cool :)
-1.3.6.1.2.1.1.3.0: TimeTicks: (49956) 0:08:19.56
+1.3.6.1.2.1.1.1.0 = String: NetSnmpTestContainer
+1.3.6.1.2.1.1.3.0 = Timeticks: (471603) 00:01:18:36.02
 ```
