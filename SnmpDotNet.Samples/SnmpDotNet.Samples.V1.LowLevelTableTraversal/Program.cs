@@ -1,57 +1,23 @@
 ﻿using SnmpDotNet.Asn1;
+using SnmpDotNet.Asn1.Serialization;
+using SnmpDotNet.Asn1.SyntaxObjects;
 using SnmpDotNet.Protocol.V1;
+using SnmpDotNet.Samples.V1.LowLevelTableTraversal;
 using SnmpDotNet.Transport;
 using System.Data;
 using System.Formats.Asn1;
 using System.Net;
 
-const string ifTable = "1.3.6.1.2.1.2.2";
+const string sysOrTable = "1.3.6.1.2.1.1.9";
 
 var target = new IPEndPoint(
     IPAddress.Parse("127.0.0.1"), 161);
 
 var transport = new BasicUdpTransport(target);
 
-var ifTableColumns = new string[]
-{
-    "ifIndex",
-    "ifDescr",
-    "ifType",
-    "ifMtu",
-    "ifSpeed",
-    "ifPhysAddress",
-    "ifAdminStatus",
-    "ifOperStatus",
-    "ifLastChange",
-    "ifInOctets",
-    "ifInUcastPkts",
-    "ifInNUcastPkts",
-    "ifInDiscards",
-    "ifInErrors",
-    "ifInUnknownProtos",
-    "ifOutOctets",
-    "ifOutUcastPkts",
-    "ifOutNUcastPkts",
-    "ifOutDiscards",
-    "ifOutErrors",
-    "ifOutQLen",
-    "ifSpecific"
-};
-
 var endOfTableReached = false;
-
-var nextOid = ifTable;
-
-using var dt = new DataTable();
-
-foreach (var colName in ifTableColumns)
-{
-    dt.Columns.Add(colName);
-}
-
-
-var columnIdx = 0;
-var currRow = dt.NewRow();
+var nextOid = sysOrTable;
+var values = new List<IAsnSerializable>();
 
 while (endOfTableReached == false)
 {
@@ -79,25 +45,36 @@ while (endOfTableReached == false)
 
     nextOid = varBind.Name;
 
-    if (!nextOid.StartsWith(ifTable))
+    if (!nextOid.StartsWith(sysOrTable))
     {
         endOfTableReached = true;
     }
     else
     {
-        Console.WriteLine(varBind);
-        
-        currRow[columnIdx] = varBind.Value;
-
-        columnIdx += 1;
-
-        if (columnIdx >= ifTableColumns.Length)
-        {
-            columnIdx = 0;
-            dt.Rows.Add(currRow);
-            currRow = dt.NewRow();
-        }
+        values.Add(varBind.Value);
     }
 }
 
-Console.WriteLine(dt);
+
+using var dt = new DataTable();
+dt.Columns.Add("sysOrOID", typeof(string));
+dt.Columns.Add("sysOrDescr", typeof(string));
+dt.Columns.Add("sysOrUptime", typeof(TimeTicks));
+
+var numRows = values.Count / dt.Columns.Count;
+
+var columns = values
+    .Chunk(numRows)
+    .Select(x => x.ToList())
+    .ToList();
+
+for (var i = 0; i < numRows; i++)
+{
+    var row = dt.NewRow();
+    row[0] = columns[0][i];
+    row[1] = columns[1][i];
+    row[2] = columns[2][i];
+    dt.Rows.Add(row);
+}
+
+dt.PrettyPrint();
