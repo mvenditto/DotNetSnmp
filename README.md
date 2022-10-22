@@ -11,7 +11,7 @@ SnmpDotNet is a NET 6 SNMP client built ontop of `System.Formats.Asn1` BER seria
   - modern C# implementation with a focus on memory efficiency
   - low level api + higher-level abstractions to ease usage in common use cases
 
-### A Sneak peek of the most basic "low-level" api usage
+### A Sneak peek of the Dispatcher API
 ```csharp
 using SnmpDotNet.Client;
 using SnmpDotNet.Common.Definitions;
