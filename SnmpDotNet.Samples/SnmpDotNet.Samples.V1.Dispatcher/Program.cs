@@ -19,8 +19,14 @@ var response = await dispatcher.SendPdu(
     target,
     new GetRequestPdu()
     {
-        VariableBindings = new("1.3.6.1.2.1.1.1.0")
+        VariableBindings = new(
+            "1.3.6.1.2.1.1.1.0", // sysDescr
+            "1.3.6.1.2.1.1.3.0"  // sysUptime
+        )
     }
 ) as GetResponsePdu;
 
-Console.WriteLine(response?.VariableBindings.First());
+foreach(var varBind in response.VariableBindings)
+{
+    Console.WriteLine(varBind);
+}

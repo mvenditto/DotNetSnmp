@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Test", "SnmpDotN
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Transport", "SnmpDotNet.Transport\SnmpDotNet.Transport.csproj", "{6E9888BD-E607-48B0-825D-98F5C33BF893}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples.Dissector", "SnmpDotNet.Samples\SnmpDotNet.Samples.Dissector\SnmpDotNet.Samples.Dissector\SnmpDotNet.Samples.Dissector.csproj", "{8F9CA231-3D5D-4A21-8621-BCCB41A8C016}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples.Dissector", "SnmpDotNet.Samples\SnmpDotNet.Samples.Dissector\SnmpDotNet.Samples.Dissector.csproj", "{8F9CA231-3D5D-4A21-8621-BCCB41A8C016}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{CBF6539C-9227-408C-848E-B0EBACFC6AF6}"
 EndProject
