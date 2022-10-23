@@ -15,7 +15,7 @@ namespace SnmpDotNet.Protocol.V3
 
         public ScopedPdu ScopedPdu { get; set; }
 
-        public ReadOnlyMemory<byte> EncryptedScopedPdu { get; private set;  }
+        public ReadOnlyMemory<byte> EncryptedScopedPdu { get; set;  }
 
         public override void WriteTo(AsnWriter writer)
         {
