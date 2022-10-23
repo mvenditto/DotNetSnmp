@@ -36,11 +36,20 @@ namespace SnmpDotNet.Asn1.SyntaxObjects
             _variableBindings = oids.Select(
                 oid => new VarBind(oid)).ToList();
         }
+        public VarBindList(VarBindList other)
+        {
+            _variableBindings = other.ToList();
+        }
 
         public VarBindList Add(VarBind varBind)
         {
             _variableBindings.Add(varBind);
             return this;
+        }
+
+        public void Clear()
+        {
+            _variableBindings.Clear();
         }
 
         public void WriteTo(AsnWriter writer)
