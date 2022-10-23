@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SnmpDotNet.Client\SnmpDotNet.Client.csproj" />
+    <ProjectReference Include="..\..\SnmpDotNet.Dispatch\SnmpDotNet.Dispatch.csproj" />
     <ProjectReference Include="..\..\SnmpDotNet.Transport\SnmpDotNet.Transport.csproj" />
   </ItemGroup>
 

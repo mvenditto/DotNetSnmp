@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.V3", "SnmpDotNet
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Asn1", "SnmpDotNet.Asn1\SnmpDotNet.Asn1.csproj", "{23C69D2E-556A-4576-AB76-82716FA324DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Client", "SnmpDotNet.Client\SnmpDotNet.Client.csproj", "{6124A6F2-98A7-4383-B1C2-2EEF2E3E0D52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Dispatch", "SnmpDotNet.Dispatch\SnmpDotNet.Dispatch.csproj", "{6124A6F2-98A7-4383-B1C2-2EEF2E3E0D52}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{70D0F542-0474-48CB-A968-5441107E1C5F}"
 	ProjectSection(SolutionItems) = preProject
@@ -38,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples.V2.LowLe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples.V1.LowLevelTableTraversal", "SnmpDotNet.Samples\SnmpDotNet.Samples.V1.LowLevelTableTraversal\SnmpDotNet.Samples.V1.LowLevelTableTraversal.csproj", "{3EF77A5C-FDFD-4980-A104-9B6ED8C745D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SnmpDotNet.Samples.V1.Dispatcher", "SnmpDotNet.Samples\SnmpDotNet.Samples.V1.Dispatcher\SnmpDotNet.Samples.V1.Dispatcher.csproj", "{86114FDE-0613-485A-90DB-5A4D2D5D9F59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SnmpDotNet.Samples.V1.Dispatcher", "SnmpDotNet.Samples\SnmpDotNet.Samples.V1.Dispatcher\SnmpDotNet.Samples.V1.Dispatcher.csproj", "{86114FDE-0613-485A-90DB-5A4D2D5D9F59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

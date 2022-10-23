@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Runtime.Caching" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SnmpDotNet.Transport\SnmpDotNet.Transport.csproj" />
     <ProjectReference Include="..\SnmpDotNet.V1\SnmpDotNet.V1.csproj" />
     <ProjectReference Include="..\SnmpDotNet.V2c\SnmpDotNet.V2c.csproj" />
