@@ -1,4 +1,6 @@
 ﻿using SnmpDotNet.Common.Definitions;
+using SnmpDotNet.Protocol.V3.Security.Authentication;
+using SnmpDotNet.V3.Security.Privacy;
 
 namespace SnmpDotNet.Transport.Targets
 {
@@ -6,7 +8,7 @@ namespace SnmpDotNet.Transport.Targets
     {
         int Retries { get; }
 
-        int MaxRequestPduBytes { get; }
+        int MaxMessageSize { get; }
 
         long Timeout { get; }
 
@@ -14,8 +16,16 @@ namespace SnmpDotNet.Transport.Targets
 
         ProtocolVersion ProtocolVersion { get; }
 
-        SecurityModel Security { get; }
+        SecurityModel SecurityModel { get; }
 
         SecurityLevel SecurityLevel { get; }
+
+        AuthenticationProtocol AuthProtocol { get; }
+
+        PrivacyProtocol PrivProtocol { get; }
+
+        string? UserPassword { get; }
+
+        ReadOnlyMemory<byte> UserPasswordBytes { get; }
     }
 }

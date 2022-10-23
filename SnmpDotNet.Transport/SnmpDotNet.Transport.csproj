@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SnmpDotNet.Asn1\SnmpDotNet.Asn1.csproj" />
     <ProjectReference Include="..\SnmpDotNet.Common\SnmpDotNet.Common.csproj" />
+    <ProjectReference Include="..\SnmpDotNet.V3\SnmpDotNet.V3.csproj" />
   </ItemGroup>
 
 </Project>
