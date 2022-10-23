@@ -1,4 +1,5 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
+using SnmpDotNet.Asn1.SyntaxObjects;
 using SnmpDotNet.Common.Definitions;
 using SnmpDotNet.Protocol.V1;
 using System.Formats.Asn1;
@@ -10,7 +11,7 @@ namespace SnmpDotNet.Protocol.V3
     /// A scopedPDU is a block of data containing a ContextEngineId, a
     /// ContextName, and a Pdu.
     /// </summary>
-    public class ScopedPdu : IAsnSerializable
+    public class ScopedPdu : Pdu
     {
         public Memory<byte> ContextEngineId { get; set; }
 
@@ -18,7 +19,29 @@ namespace SnmpDotNet.Protocol.V3
 
         public Pdu Pdu { get; set; }
 
-        public void WriteTo(AsnWriter writer)
+        public override Asn1Tag PduType => Pdu.PduType;
+
+        public new int RequestId => Pdu.RequestId;
+
+        public new PduErrorStatus ErrorStatus => Pdu.ErrorStatus;
+
+        public new int ErrorIndex => Pdu.ErrorIndex;
+
+        public new VarBindList VariableBindings => Pdu.VariableBindings;
+
+        public new bool HasData => Pdu.VariableBindings?.IsEmpty == false;
+
+        public override object Clone()
+        {
+            return new ScopedPdu
+            {
+                ContextEngineId = ContextEngineId,
+                ContextName = ContextName,
+                Pdu = (Pdu) Pdu.Clone()
+            };
+        }
+
+        public override void WriteTo(AsnWriter writer)
         {
             using (_ = writer.PushSequence())
             {
