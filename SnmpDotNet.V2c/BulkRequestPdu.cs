@@ -1,6 +1,7 @@
 ﻿using SnmpDotNet.Asn1.Serialization;
 using SnmpDotNet.Asn1.SyntaxObjects;
 using SnmpDotNet.Common.Definitions;
+using SnmpDotNet.Protocol.V1;
 using System.Formats.Asn1;
 
 namespace SnmpDotNet.Protocol.V2
@@ -32,6 +33,13 @@ namespace SnmpDotNet.Protocol.V2
                     VariableBindings.WriteTo(writer);
                 }
             }
+        }
+
+        public override object Clone()
+        {
+            var cloned = new BulkRequestPdu();
+            base.CopyTo(cloned);
+            return cloned;
         }
     }
 }

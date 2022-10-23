@@ -28,5 +28,11 @@ namespace SnmpDotNet.Protocol.V1
                 VariableBindings = bindings
             };
         }
+        public override object Clone()
+        {
+            var cloned = new GetNextRequestPdu();
+            base.CopyTo(cloned);
+            return cloned;
+        }
     }
 }
