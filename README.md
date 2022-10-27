@@ -1,9 +1,12 @@
 # DotNetSnmp
 [![Build](https://github.com/mvenditto/SnmpDotNet/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mvenditto/SnmpDotNet/actions/workflows/dotnet.yml) [![codecov](https://codecov.io/gh/mvenditto/SnmpDotNet/branch/master/graph/badge.svg?token=P3JJTXWQ2V)](https://codecov.io/gh/mvenditto/SnmpDotNet)
+![NuGet](https://img.shields.io/badge/nuget-v0.9.7--alpha-yellow)
 
 SnmpDotNet is a NET 6 SNMP client built ontop of `System.Formats.Asn1` BER serialization capabilities.
 
 > :information_source: The library is in early development stage and subject to frequent api changes!
+
+Try the [NuGet Package](https://www.nuget.org/packages/DotNetSnmp)
 
 ### Goals:
   - support for SNMP V1, V2c and V3
