@@ -1,10 +1,9 @@
-# SnmpDotNet
+# DotNetSnmp
 [![Build](https://github.com/mvenditto/SnmpDotNet/actions/workflows/dotnet.yml/badge.svg)](https://github.com/mvenditto/SnmpDotNet/actions/workflows/dotnet.yml) [![codecov](https://codecov.io/gh/mvenditto/SnmpDotNet/branch/master/graph/badge.svg?token=P3JJTXWQ2V)](https://codecov.io/gh/mvenditto/SnmpDotNet)
 
 SnmpDotNet is a NET 6 SNMP client built ontop of `System.Formats.Asn1` BER serialization capabilities.
 
-> :information_source: The library is in early development stage and subject to frequent api changes! <br>
-> (At the moment it is actually the product of a weekend-project, so be nice :)
+> :information_source: The library is in early development stage and subject to frequent api changes!
 
 ### Goals:
   - support for SNMP V1, V2c and V3
@@ -13,11 +12,11 @@ SnmpDotNet is a NET 6 SNMP client built ontop of `System.Formats.Asn1` BER seria
 
 ### A Sneak peek of the Dispatcher API
 ```csharp
-using SnmpDotNet.Client;
-using SnmpDotNet.Common.Definitions;
-using SnmpDotNet.Protocol.V1;
-using SnmpDotNet.Transport;
-using SnmpDotNet.Transport.Targets;
+using DotNetSnmp.Client;
+using DotNetSnmp.Common.Definitions;
+using DotNetSnmp.Protocol.V1;
+using DotNetSnmp.Transport;
+using DotNetSnmp.Transport.Targets;
 using System.Net;
 
 var targetAddress = new IPEndPoint(
@@ -45,6 +44,6 @@ foreach(var varBind in response.VariableBindings)
 ```
 Output:
 ```bash
-1.3.6.1.2.1.1.1.0 = String: NetSnmpTestContainer
+1.3.6.1.2.1.1.1.0 = String: SnmpTestAgentContainer
 1.3.6.1.2.1.1.3.0 = Timeticks: (471603) 00:01:18:36.02
 ```
