@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Title>DotNetSnmp SNMP client library</Title>
+	<Author>mvenditto</Author>
+    <Authors>mvenditto</Authors>
+	<Description>DotNetSnmp SNMP client library</Description>
+    <RepositoryUrl>https://github.com/mvenditto/DotNetSnmp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>snmp;md5;sha2;sha-256;sha-384;sha-512;sha1;snmpv1;snmpv3;snmpd;snmpv2;mib;snmpget;snmp-client;snmpwalk;snmpv2c;rfc1155;rfc1157;rfc3414;rfc2570</PackageTags>
+    <Version>0.9.7-alpha</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetSnmp.Asn1\DotNetSnmp.Asn1.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.Common\DotNetSnmp.Common.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.Dispatch\DotNetSnmp.Dispatch.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.Transport\DotNetSnmp.Transport.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.Utils\DotNetSnmp.Utils.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.V1\DotNetSnmp.V1.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.V2c\DotNetSnmp.V2c.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.V3\DotNetSnmp.V3.csproj" />
+  </ItemGroup>
+
+</Project>

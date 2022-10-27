@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetSnmp.Asn1\DotNetSnmp.Asn1.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.Common\DotNetSnmp.Common.csproj" />
+    <ProjectReference Include="..\DotNetSnmp.V3\DotNetSnmp.V3.csproj" />
+  </ItemGroup>
+
+</Project>
