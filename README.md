@@ -35,7 +35,7 @@ var response = await dispatcher.SendPdu(
             "1.3.6.1.2.1.1.3.0"  // sysUptime
         )
     }
-) as GetResponsePdu;
+);
 
 foreach(var varBind in response.VariableBindings)
 {
